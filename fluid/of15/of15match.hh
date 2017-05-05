@@ -1,18 +1,19 @@
-#ifndef OPENFLOW_MATCH_H
-#define OPENFLOW_MATCH_H 1
+#ifndef OF15OPENFLOW_MATCH_H
+#define OF15OPENFLOW_MATCH_H 1
 
 #include <string>
 #include <stdint.h>
 #include "fluid/util/ethaddr.hh"
 #include "fluid/util/ipaddr.hh"
-#include "openflow-13.h"
 #include <list>
 #include <map>
 #include <vector>
 
+#include "openflow-15.h"
+
 namespace fluid_msg {
 
-namespace of13 {
+namespace of15 {
 
 class MatchHeader {
 protected:
@@ -141,6 +142,52 @@ public:
     OXMTLV& operator=(const OXMTLV& field);
     virtual InPhyPort* clone() const {
         return new InPhyPort(*this);
+    }
+    size_t pack(uint8_t *buffer);
+    of_error unpack(uint8_t *buffer);
+    uint32_t value() const {
+        return this->value_;
+    }
+    void value(uint32_t value) {
+        this->value_ = value;
+    }
+};
+
+class ActsetOutput: public OXMTLV {
+private:
+    uint32_t value_;
+public:
+    ActsetOutput();
+    ActsetOutput(uint32_t value);
+    ~ActsetOutput() {
+    }
+    virtual bool equals(const OXMTLV & other);
+    OXMTLV& operator=(const OXMTLV& field);
+    virtual ActsetOutput* clone() const {
+        return new ActsetOutput(*this);
+    }
+    size_t pack(uint8_t *buffer);
+    of_error unpack(uint8_t *buffer);
+    uint32_t value() const {
+        return this->value_;
+    }
+    void value(uint32_t value) {
+        this->value_ = value;
+    }
+};
+
+class PacketType: public OXMTLV {
+private:
+    uint32_t value_;
+public:
+    PacketType();
+    PacketType(uint32_t value);
+    ~PacketType() {
+    }
+    virtual bool equals(const OXMTLV & other);
+    OXMTLV& operator=(const OXMTLV& field);
+    virtual PacketType* clone() const {
+        return new PacketType(*this);
     }
     size_t pack(uint8_t *buffer);
     of_error unpack(uint8_t *buffer);
@@ -1152,6 +1199,68 @@ public:
     }
 };
 
+class PacketReg: public OXMTLV { //Aman
+private:
+    uint64_t value_;
+    uint64_t mask_;
+public:
+    PacketReg(uint8_t field);
+    PacketReg(uint8_t field, uint64_t value);
+    PacketReg(uint8_t field, uint64_t value, uint64_t mask);
+    ~PacketReg() {
+    }
+    virtual bool equals(const OXMTLV & other);
+    OXMTLV& operator=(const OXMTLV& field);
+    virtual PacketReg* clone() const {
+        return new PacketReg(*this);
+    }
+    size_t pack(uint8_t *buffer);
+    of_error unpack(uint8_t *buffer);
+    uint64_t value() const {
+        return this->value_;
+    }
+    uint64_t mask() const {
+        return this->mask_;
+    }
+    void value(uint64_t value) {
+        this->value_ = value;
+    }
+    void mask(uint64_t mask) {
+        this->mask_ = mask;
+    }
+};
+
+class TcpFlags: public OXMTLV { //Aman
+private:
+    uint16_t value_;
+    uint16_t mask_;
+public:
+    TcpFlags();
+    TcpFlags(uint16_t value);
+    TcpFlags(uint16_t value, uint16_t mask);
+    ~TcpFlags() {
+    }
+    virtual bool equals(const OXMTLV & other);
+    OXMTLV& operator=(const OXMTLV& field);
+    virtual TcpFlags* clone() const {
+        return new TcpFlags(*this);
+    }
+    size_t pack(uint8_t *buffer);
+    of_error unpack(uint8_t *buffer);
+    uint16_t value() const {
+        return this->value_;
+    }
+    uint16_t mask() const {
+        return this->mask_;
+    }
+    void value(uint16_t value) {
+        this->value_ = value;
+    }
+    void mask(uint16_t mask) {
+        this->mask_ = mask;
+    }
+};
+
 class Match: public MatchHeader {
 private:
     /*Current tlvs present by field*/
@@ -1177,6 +1286,8 @@ public:
     static OXMTLV * make_oxm_tlv(uint8_t field);
     InPort* in_port();
     InPhyPort* in_phy_port();
+    ActsetOutput* actset_output();
+    PacketType* packet_type();
     Metadata* metadata();
     EthSrc* eth_src();
     EthDst* eth_dst();
@@ -1215,10 +1326,192 @@ public:
     PBBIsid* pbb_isid();
     TUNNELId* tunnel_id();
     IPv6Exthdr* ipv6_exthdr();
+    TcpFlags* tcp_flags();
 };
 
-} //End of namespace of13
+class PacketRegSet { //Aman
+private:
+    /*Current packet register tlvs present by field*/
+    std::vector<uint8_t> curr_packet_reg_tlvs_;
+    /*Vector of packet registers as OXM TLVs*/
+    PacketReg* oxm_packet_reg_tlvs_[OXM_PACKET_REG_NUM];
+
+public:
+    PacketRegSet();
+    ~PacketRegSet();
+    PacketReg* packet_reg(uint8_t field);
+    bool check_dup_packet_reg(PacketReg *tlv);
+    void add_packet_reg(PacketReg &tlv);
+    void add_packet_reg(PacketReg* tlv);
+    static PacketReg* make_packet_reg(uint8_t field);
+};
+
+class Duration: public OXMTLV {
+private:
+    uint32_t duration_sec_;
+    uint32_t duration_nsec_;
+public:
+    Duration();
+    Duration(uint32_t duration_sec, uint32_t duration_nsec);
+    ~Duration() {
+    }
+    virtual bool equals(const OXMTLV & other);
+    OXMTLV& operator=(const OXMTLV& field);
+    virtual Duration* clone() const {
+        return new Duration(*this);
+    }
+    size_t pack(uint8_t *buffer);
+    of_error unpack(uint8_t *buffer);
+    uint32_t duration_sec() const {
+        return this->duration_sec_;
+    }
+    uint32_t duration_nsec() const {
+        return this->duration_nsec_;
+    }
+    void duration_sec(uint32_t duration_sec) {
+        this->duration_sec_ = duration_sec;
+    }
+    void duration_nsec(uint32_t duration_nsec) {
+        this->duration_nsec_ = duration_nsec;
+    }
+};
+
+class IdleTime: public OXMTLV {
+private:
+    uint32_t idle_time_sec_;
+    uint32_t idle_time_nsec_;
+public:
+    IdleTime();
+    IdleTime(uint32_t idle_time_sec, uint32_t idle_time_nsec);
+    ~IdleTime() {
+    }
+    virtual bool equals(const OXMTLV & other);
+    OXMTLV& operator=(const OXMTLV& field);
+    virtual IdleTime* clone() const {
+        return new IdleTime(*this);
+    }
+    size_t pack(uint8_t *buffer);
+    of_error unpack(uint8_t *buffer);
+    uint32_t idle_time_sec() const {
+        return this->idle_time_sec_;
+    }
+    uint32_t idle_time_nsec() const {
+        return this->idle_time_nsec_;
+    }
+    void idle_time_sec(uint32_t idle_time_sec) {
+        this->idle_time_sec_ = idle_time_sec;
+    }
+    void idle_time_nsec(uint32_t idle_time_nsec) {
+        this->idle_time_nsec_ = idle_time_nsec;
+    }
+};
+
+class FlowCount: public OXMTLV {
+private:
+    uint32_t flow_count_;
+public:
+    FlowCount();
+    FlowCount(uint32_t flow_count);
+    ~FlowCount() {
+    }
+    virtual bool equals(const OXMTLV & other);
+    OXMTLV& operator=(const OXMTLV& field);
+    virtual FlowCount* clone() const {
+        return new FlowCount(*this);
+    }
+    size_t pack(uint8_t *buffer);
+    of_error unpack(uint8_t *buffer);
+    uint32_t flow_count() const {
+        return this->flow_count_;
+    }
+    void flow_count(uint32_t flow_count) {
+        this->flow_count_ = flow_count;
+    }
+};
+
+class PacketCount: public OXMTLV {
+private:
+    uint64_t packet_count_;
+public:
+    PacketCount();
+    PacketCount(uint64_t packet_count);
+    ~PacketCount() {
+    }
+    virtual bool equals(const OXMTLV & other);
+    OXMTLV& operator=(const OXMTLV& field);
+    virtual PacketCount* clone() const {
+        return new PacketCount(*this);
+    }
+    size_t pack(uint8_t *buffer);
+    of_error unpack(uint8_t *buffer);
+    uint64_t packet_count() const {
+        return this->packet_count_;
+    }
+    void packet_count(uint64_t packet_count) {
+        this->packet_count_ = packet_count;
+    }
+};
+
+class ByteCount: public OXMTLV {
+private:
+    uint64_t byte_count_;
+public:
+    ByteCount();
+    ByteCount(uint64_t byte_count);
+    ~ByteCount() {
+    }
+    virtual bool equals(const OXMTLV & other);
+    OXMTLV& operator=(const OXMTLV& field);
+    virtual ByteCount* clone() const {
+        return new ByteCount(*this);
+    }
+    size_t pack(uint8_t *buffer);
+    of_error unpack(uint8_t *buffer);
+    uint64_t byte_count() const {
+        return this->byte_count_;
+    }
+    void byte_count(uint64_t byte_count) {
+        this->byte_count_ = byte_count;
+    }
+};
+
+class Stats {
+private:
+    uint16_t length_;
+    /*Current tlvs present by field*/
+    std::vector<uint8_t> curr_tlvs_;
+    /*Vector of OXS TLVs*/
+    OXMTLV* oxs_tlvs_[OXM_NUM];
+public:
+    Stats();
+    Stats(const Stats &stats);
+    Stats& operator=(Stats other);
+    ~Stats();
+    bool operator==(const Stats &other) const;
+    bool operator!=(const Stats &other) const;
+    static void swap(Stats& first, Stats& second);
+    size_t pack(uint8_t *buffer);
+    of_error unpack(uint8_t *buffer);
+    OXMTLV *oxs_field(uint8_t field);
+    bool check_dup(OXMTLV *tlv);
+    void add_oxs_field(OXMTLV &tlv);
+    void add_oxs_field(OXMTLV* tlv);
+    uint16_t oxs_fields_len();
+    static OXMTLV * make_oxs_tlv(uint8_t field);
+    uint16_t length() {
+        return this->length_;
+    }
+    void length(uint16_t length) {
+        this->length_ = length;
+    }
+    Duration* duration();
+    IdleTime* idle_time();
+    FlowCount* flow_count();
+    PacketCount* packet_count();
+    ByteCount* byte_count();
+};
+
+} //End of namespace of15
 
 } //End of namespace fluid_msg
 #endif
-

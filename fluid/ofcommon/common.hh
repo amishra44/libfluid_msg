@@ -109,6 +109,7 @@ public:
     }
     static QueueProperty* make_queue_of10_property(uint16_t property);
     static QueueProperty* make_queue_of13_property(uint16_t property);
+    static QueueProperty* make_queue_of15_property(uint16_t property);
     static bool delete_all(QueueProperty * prop) {
         delete prop;
         return true;

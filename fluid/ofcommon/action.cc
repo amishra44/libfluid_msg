@@ -114,6 +114,22 @@ of_error ActionList::unpack13(uint8_t *buffer) {
     return 0;
 }
 
+//Added for OF 1.5
+of_error ActionList::unpack15(uint8_t *buffer) {
+    uint8_t *p = buffer;
+    size_t len = this->length_;
+    Action *act;
+    while (len) {
+        uint16_t type = ntoh16(*((uint16_t*) p));
+        act = Action::make_of15_action(type);
+        act->unpack(p);
+        this->action_list_.push_back(act);
+        len -= act->length();
+        p += act->length();
+    }
+    return 0;
+}
+
 ActionList& ActionList::operator=(ActionList other) {
     swap(*this, other);
     return *this;

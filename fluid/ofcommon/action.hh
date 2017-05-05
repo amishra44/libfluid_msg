@@ -46,6 +46,7 @@ public:
     }
     static Action * make_of10_action(uint16_t type);
     static Action * make_of13_action(uint16_t type);
+    static Action * make_of15_action(uint16_t type);
     static bool delete_all(Action * action) {
         delete action;
         return true;
@@ -71,6 +72,7 @@ public:
     size_t pack(uint8_t *buffer);
     of_error unpack10(uint8_t *buffer);
     of_error unpack13(uint8_t *buffer);
+    of_error unpack15(uint8_t *buffer);
     friend void swap(ActionList& first, ActionList& second);
     uint16_t length() {
         return this->length_;

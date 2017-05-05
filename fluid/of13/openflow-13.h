@@ -1380,7 +1380,7 @@ struct ofp_packet_out {
 };
 OFP_ASSERT(sizeof(struct ofp_packet_out) == 24);
 
-#define OFP_NO_BUFFER 0xffffffff
+const uint32_t OFP_NO_BUFFER = 0xffffffff;
 
 /* Packet received on port (datapath -> controller). */
 struct ofp_packet_in {

@@ -92,10 +92,13 @@ struct ofp_desc {
 OFP_ASSERT(sizeof(struct ofp_desc) == 1056);
 
 /* Role request and reply message. */
+// Updated for OF 1.5
+// TODO: Support backward compatibility with OF 1.0 and 1.3
 struct ofp_role_request {
     struct ofp_header header; /* Type OFPT_ROLE_REQUEST/OFPT_ROLE_REPLY. */
-    uint32_t role; /* One of NX_ROLE_*. */
-    uint8_t pad[4]; /* Align to 64 bits. */
+    uint32_t role; /* One of OFPCR_ROLE_*. */
+    uint16_t short_id; /* ID number for the controller. */
+    uint8_t pad[2]; /* Align to 64 bits. */
     uint64_t generation_id; /* Master Election Generation Id */
 };
 OFP_ASSERT(sizeof(struct ofp_role_request) == 24);

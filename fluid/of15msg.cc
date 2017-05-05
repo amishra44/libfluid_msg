@@ -1,6 +1,10 @@
-#include "of13msg.hh"
+#include "of15msg.hh"
+#include <iostream>
 
 namespace fluid_msg {
+
+//Aman
+namespace of15 {
 
 RoleCommon::RoleCommon(uint8_t version, uint8_t type)
     : OFMsg(version, type),
@@ -39,7 +43,7 @@ of_error RoleCommon::unpack(uint8_t *buffer) {
     struct ofp_role_request * rq = (struct ofp_role_request*) buffer;
     OFMsg::unpack(buffer);
     if (this->length_ < sizeof(struct ofp_role_request)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->role_ = ntoh32(rq->role);
     memset(rq->pad, 0x0, 4);
@@ -89,12 +93,13 @@ bool AsyncConfigCommon::operator!=(const AsyncConfigCommon &other) const {
 uint8_t* AsyncConfigCommon::pack() {
     uint8_t* buffer = OFMsg::pack();
     struct ofp_async_config *ar = (struct ofp_async_config *) buffer;
-    ar->packet_in_mask[0] = hton32(this->packet_in_mask_[0]);
-    ar->packet_in_mask[1] = hton32(this->packet_in_mask_[1]);
-    ar->port_status_mask[0] = hton32(this->port_status_mask_[0]);
-    ar->port_status_mask[1] = hton32(this->port_status_mask_[1]);
-    ar->flow_removed_mask[0] = hton32(this->flow_removed_mask_[0]);
-    ar->flow_removed_mask[1] = hton32(this->flow_removed_mask_[1]);
+//Aman
+//    ar->packet_in_mask[0] = hton32(this->packet_in_mask_[0]);
+//    ar->packet_in_mask[1] = hton32(this->packet_in_mask_[1]);
+//    ar->port_status_mask[0] = hton32(this->port_status_mask_[0]);
+//    ar->port_status_mask[1] = hton32(this->port_status_mask_[1]);
+//    ar->flow_removed_mask[0] = hton32(this->flow_removed_mask_[0]);
+//    ar->flow_removed_mask[1] = hton32(this->flow_removed_mask_[1]);
     return buffer;
 }
 
@@ -102,29 +107,28 @@ of_error AsyncConfigCommon::unpack(uint8_t *buffer) {
     struct ofp_async_config *ar = (struct ofp_async_config *) buffer;
     OFMsg::unpack(buffer);
     if (this->length_ < sizeof(struct ofp_async_config)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
-    this->packet_in_mask_[0] = ntoh32(ar->packet_in_mask[0]);
-    this->packet_in_mask_[1] = ntoh32(ar->packet_in_mask[1]);
-    this->port_status_mask_[0] = ntoh32(ar->port_status_mask[0]);
-    this->port_status_mask_[1] = ntoh32(ar->port_status_mask[1]);
-    this->flow_removed_mask_[0] = ntoh32(ar->flow_removed_mask[0]);
-    this->flow_removed_mask_[1] = ntoh32(ar->flow_removed_mask[1]);
+//Aman
+//    this->packet_in_mask_[0] = ntoh32(ar->packet_in_mask[0]);
+//    this->packet_in_mask_[1] = ntoh32(ar->packet_in_mask[1]);
+//    this->port_status_mask_[0] = ntoh32(ar->port_status_mask[0]);
+//    this->port_status_mask_[1] = ntoh32(ar->port_status_mask[1]);
+//    this->flow_removed_mask_[0] = ntoh32(ar->flow_removed_mask[0]);
+//    this->flow_removed_mask_[1] = ntoh32(ar->flow_removed_mask[1]);
     return 0;
 }
 
-namespace of13 {
-
 Hello::Hello()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_HELLO) {
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_HELLO) {
 }
 
 Hello::Hello(uint32_t xid)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_HELLO, xid) {
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_HELLO, xid) {
 }
 
 Hello::Hello(uint32_t xid, std::list<HelloElemVersionBitmap> elements)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_HELLO, xid),
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_HELLO, xid),
       elements_(elements) {
     this->length_ += elements_len();
 }
@@ -184,82 +188,83 @@ uint32_t Hello::elements_len() {
 }
 
 Error::Error()
-    : ErrorCommon(of13::OFP_VERSION, of13::OFPT_ERROR) {
+    : ErrorCommon(of15::OFP_VERSION, of15::OFPT_ERROR) {
 }
 
 Error::Error(uint32_t xid, uint16_t err_type, uint16_t code)
-    : ErrorCommon(of13::OFP_VERSION, of13::OFPT_ERROR, xid, err_type, code) {
+    : ErrorCommon(of15::OFP_VERSION, of15::OFPT_ERROR, xid, err_type, code) {
 }
 
 Error::Error(uint32_t xid, uint16_t err_type, uint16_t code, uint8_t *data,
     size_t data_len)
-    : ErrorCommon(of13::OFP_VERSION, of13::OFPT_ERROR, xid, err_type, code,
+    : ErrorCommon(of15::OFP_VERSION, of15::OFPT_ERROR, xid, err_type, code,
         data, data_len) {
 }
 
 EchoRequest::EchoRequest()
-    : EchoCommon(of13::OFP_VERSION, of13::OFPT_ECHO_REQUEST) {
+    : EchoCommon(of15::OFP_VERSION, of15::OFPT_ECHO_REQUEST) {
 }
 
 EchoRequest::EchoRequest(uint32_t xid)
-    : EchoCommon(of13::OFP_VERSION, of13::OFPT_ECHO_REQUEST, xid) {
+    : EchoCommon(of15::OFP_VERSION, of15::OFPT_ECHO_REQUEST, xid) {
 }
 
 EchoReply::EchoReply()
-    : EchoCommon(of13::OFP_VERSION, of13::OFPT_ECHO_REPLY) {
+    : EchoCommon(of15::OFP_VERSION, of15::OFPT_ECHO_REPLY) {
 }
 
 EchoReply::EchoReply(uint32_t xid)
-    : EchoCommon(of13::OFP_VERSION, of13::OFPT_ECHO_REPLY, xid) {
+    : EchoCommon(of15::OFP_VERSION, of15::OFPT_ECHO_REPLY, xid) {
 }
 
-Experimenter::Experimenter()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_EXPERIMENTER) {
-    this->length_ += sizeof(struct of13::ofp_experimenter_header);
-}
-
-Experimenter::Experimenter(uint32_t xid, uint32_t experimenter,
-    uint32_t exp_type)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_EXPERIMENTER, xid),
-      experimenter_(experimenter),
-      exp_type_(exp_type) {
-    this->length_ += sizeof(struct of13::ofp_experimenter_header);
-}
-
-bool Experimenter::operator==(const Experimenter &other) const {
-    return ((Experimenter::operator==(other))
-        && (this->experimenter_ == other.experimenter_)
-        && (this->exp_type_ == other.exp_type_));
-}
-
-bool Experimenter::operator!=(const Experimenter &other) const {
-    return !(*this == other);
-}
-
-uint8_t* Experimenter::pack() {
-    uint8_t* buffer = OFMsg::pack();
-    struct of13::ofp_experimenter_header *em =
-        (struct of13::ofp_experimenter_header*) buffer;
-    em->experimenter = hton32(this->experimenter_);
-    em->exp_type = hton32(this->exp_type_);
-    return buffer;
-}
-
-of_error Experimenter::unpack(uint8_t *buffer) {
-    struct of13::ofp_experimenter_header *em =
-        (struct of13::ofp_experimenter_header*) buffer;
-    OFMsg::unpack(buffer);
-    this->experimenter_ = ntoh32(em->experimenter);
-    this->exp_type_ = ntoh32(em->exp_type);
-    return 0;
-}
+//Aman
+//Experimenter::Experimenter()
+//    : OFMsg(of15::OFP_VERSION, of15::OFPT_EXPERIMENTER) {
+//    this->length_ += sizeof(struct of15::ofp_experimenter_header);
+//}
+//
+//Experimenter::Experimenter(uint32_t xid, uint32_t experimenter,
+//    uint32_t exp_type)
+//    : OFMsg(of15::OFP_VERSION, of15::OFPT_EXPERIMENTER, xid),
+//      experimenter_(experimenter),
+//      exp_type_(exp_type) {
+//    this->length_ += sizeof(struct of15::ofp_experimenter_header);
+//}
+//
+//bool Experimenter::operator==(const Experimenter &other) const {
+//    return ((Experimenter::operator==(other))
+//        && (this->experimenter_ == other.experimenter_)
+//        && (this->exp_type_ == other.exp_type_));
+//}
+//
+//bool Experimenter::operator!=(const Experimenter &other) const {
+//    return !(*this == other);
+//}
+//
+//uint8_t* Experimenter::pack() {
+//    uint8_t* buffer = OFMsg::pack();
+//    struct of15::ofp_experimenter_header *em =
+//        (struct of15::ofp_experimenter_header*) buffer;
+//    em->experimenter = hton32(this->experimenter_);
+//    em->exp_type = hton32(this->exp_type_);
+//    return buffer;
+//}
+//
+//of_error Experimenter::unpack(uint8_t *buffer) {
+//    struct of15::ofp_experimenter_header *em =
+//        (struct of15::ofp_experimenter_header*) buffer;
+//    OFMsg::unpack(buffer);
+//    this->experimenter_ = ntoh32(em->experimenter);
+//    this->exp_type_ = ntoh32(em->exp_type);
+//    return 0;
+//}
 
 FeaturesRequest::FeaturesRequest()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_FEATURES_REQUEST) {
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_FEATURES_REQUEST) {
 }
 
 FeaturesRequest::FeaturesRequest(uint32_t xid)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_FEATURES_REQUEST, xid) {
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_FEATURES_REQUEST, xid) {
 }
 
 uint8_t* FeaturesRequest::pack() {
@@ -270,23 +275,23 @@ uint8_t* FeaturesRequest::pack() {
 of_error FeaturesRequest::unpack(uint8_t *buffer) {
     OFMsg::unpack(buffer);
     if (this->length_ < sizeof(ofp_header)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     return 0;
 }
 
 FeaturesReply::FeaturesReply()
-    : FeaturesReplyCommon(of13::OFP_VERSION, of13::OFPT_FEATURES_REPLY) {
-    this->length_ = sizeof(struct of13::ofp_switch_features);
+    : FeaturesReplyCommon(of15::OFP_VERSION, of15::OFPT_FEATURES_REPLY) {
+    this->length_ = sizeof(struct of15::ofp_switch_features);
 }
 
 FeaturesReply::FeaturesReply(uint32_t xid, uint64_t datapath_id,
     uint32_t n_buffers, uint8_t n_tables, uint8_t auxiliary_id,
     uint32_t capabilities)
-    : FeaturesReplyCommon(of13::OFP_VERSION, of13::OFPT_FEATURES_REPLY, xid,
+    : FeaturesReplyCommon(of15::OFP_VERSION, of15::OFPT_FEATURES_REPLY, xid,
           datapath_id, n_buffers, n_tables, capabilities),
       auxiliary_id_(auxiliary_id) {
-    this->length_ = sizeof(struct of13::ofp_switch_features);
+    this->length_ = sizeof(struct of15::ofp_switch_features);
 }
 
 bool FeaturesReply::operator==(const FeaturesReply &other) const {
@@ -300,8 +305,8 @@ bool FeaturesReply::operator!=(const FeaturesReply &other) const {
 
 uint8_t* FeaturesReply::pack() {
     uint8_t* buffer = OFMsg::pack();
-    struct of13::ofp_switch_features *fr =
-        (struct of13::ofp_switch_features *) buffer;
+    struct of15::ofp_switch_features *fr =
+        (struct of15::ofp_switch_features *) buffer;
     fr->datapath_id = hton64(this->datapath_id_);
     fr->n_buffers = hton32(this->n_buffers_);
     fr->n_tables = this->n_tables_;
@@ -313,11 +318,11 @@ uint8_t* FeaturesReply::pack() {
 }
 
 of_error FeaturesReply::unpack(uint8_t *buffer) {
-    struct of13::ofp_switch_features *fr =
-        (struct of13::ofp_switch_features *) buffer;
+    struct of15::ofp_switch_features *fr =
+        (struct of15::ofp_switch_features *) buffer;
     OFMsg::unpack(buffer);
-    if (this->length_ < sizeof(struct of13::ofp_switch_features)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+    if (this->length_ < sizeof(struct of15::ofp_switch_features)) {
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->datapath_id_ = ntoh64(fr->datapath_id);
     this->n_buffers_ = ntoh32(fr->n_buffers);
@@ -329,11 +334,11 @@ of_error FeaturesReply::unpack(uint8_t *buffer) {
 }
 
 GetConfigRequest::GetConfigRequest()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_GET_CONFIG_REQUEST) {
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_GET_CONFIG_REQUEST) {
 }
 
 GetConfigRequest::GetConfigRequest(uint32_t xid)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_GET_CONFIG_REQUEST, xid) {
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_GET_CONFIG_REQUEST, xid) {
 }
 
 uint8_t* GetConfigRequest::pack() {
@@ -344,45 +349,43 @@ uint8_t* GetConfigRequest::pack() {
 of_error GetConfigRequest::unpack(uint8_t *buffer) {
     OFMsg::unpack(buffer);
     if (this->length_ < sizeof(struct ofp_header)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     return 0;
 }
 
 GetConfigReply::GetConfigReply()
-    : SwitchConfigCommon(of13::OFP_VERSION, of13::OFPT_GET_CONFIG_REPLY) {
+    : SwitchConfigCommon(of15::OFP_VERSION, of15::OFPT_GET_CONFIG_REPLY) {
 }
 
 GetConfigReply::GetConfigReply(uint32_t xid, uint16_t flags,
     uint16_t miss_send_len)
-    : SwitchConfigCommon(of13::OFP_VERSION, of13::OFPT_GET_CONFIG_REPLY, xid,
+    : SwitchConfigCommon(of15::OFP_VERSION, of15::OFPT_GET_CONFIG_REPLY, xid,
         flags, miss_send_len) {
 }
 
 SetConfig::SetConfig()
-    : SwitchConfigCommon(of13::OFP_VERSION, of13::OFPT_SET_CONFIG) {
+    : SwitchConfigCommon(of15::OFP_VERSION, of15::OFPT_SET_CONFIG) {
 }
 
 SetConfig::SetConfig(uint32_t xid, uint16_t flags, uint16_t miss_send_len)
-    : SwitchConfigCommon(of13::OFP_VERSION, of13::OFPT_SET_CONFIG, xid, flags,
+    : SwitchConfigCommon(of15::OFP_VERSION, of15::OFPT_SET_CONFIG, xid, flags,
         miss_send_len) {
 }
 
 PacketOut::PacketOut()
-    : PacketOutCommon(of13::OFP_VERSION, of13::OFPT_PACKET_OUT),
-      in_port_(0) {
-    this->length_ = sizeof(struct of13::ofp_packet_out);
+    : PacketOutCommon(of15::OFP_VERSION, of15::OFPT_PACKET_OUT) {
+    this->length_ = sizeof(struct of15::ofp_packet_out);
 }
 
-PacketOut::PacketOut(uint32_t xid, uint32_t buffer_id, uint32_t in_port)
-    : PacketOutCommon(of13::OFP_VERSION, of13::OFPT_PACKET_OUT, xid, buffer_id),
-      in_port_(in_port) {
-    this->length_ = sizeof(struct of13::ofp_packet_out);
+PacketOut::PacketOut(uint32_t xid, uint32_t buffer_id)
+    : PacketOutCommon(of15::OFP_VERSION, of15::OFPT_PACKET_OUT, xid, buffer_id) {
+    this->length_ = sizeof(struct of15::ofp_packet_out);
 }
 
 bool PacketOut::operator==(const PacketOut &other) const {
     return ((PacketOutCommon::operator==(other))
-        && (this->in_port_ == other.in_port_));
+        && (this->match_ == other.match_));
 }
 
 bool PacketOut::operator!=(const PacketOut &other) const {
@@ -392,62 +395,76 @@ bool PacketOut::operator!=(const PacketOut &other) const {
 uint8_t* PacketOut::pack() {
     size_t data_size;
     uint8_t* buffer = OFMsg::pack();
-    struct of13::ofp_packet_out *po = (struct of13::ofp_packet_out*) buffer;
+    struct of15::ofp_packet_out *po = (struct of15::ofp_packet_out*) buffer;
     po->buffer_id = hton32(this->buffer_id_);
-    po->in_port = hton32(this->in_port_);
     po->actions_len = hton16(this->actions_len_);
-    memset(po->pad, 0x0, 6);
-    this->actions_.pack(buffer + sizeof(struct of13::ofp_packet_out));
+    memset(po->pad, 0x0, 2);
+    this->match_.pack(buffer + sizeof(struct of15::ofp_packet_out) - sizeof(struct of15::ofp_match));
+    this->actions_.pack(buffer + sizeof(struct of15::ofp_packet_out) - sizeof(struct of15::ofp_match) + ROUND_UP(this->match_.length(), 8));
     data_size = this->length_
-        - (sizeof(struct of13::ofp_packet_out) + this->actions_len_);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_packet_out)
-        + this->actions_len_;
+        - (sizeof(struct of15::ofp_packet_out) - sizeof(struct of15::ofp_match) + ROUND_UP(this->match_.length(), 8) + this->actions_len_);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_packet_out)
+        - sizeof(struct of15::ofp_match) + ROUND_UP(this->match_.length(), 8) + this->actions_len_;
     memcpy(p, this->data_, data_size);
     return buffer;
 }
 
 of_error PacketOut::unpack(uint8_t *buffer) {
-    struct of13::ofp_packet_out *po = (struct of13::ofp_packet_out*) buffer;
+    struct of15::ofp_packet_out *po = (struct of15::ofp_packet_out*) buffer;
     OFMsg::unpack(buffer);
-    if (this->length_ < sizeof(struct of13::ofp_packet_out)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+    if (this->length_ < sizeof(struct of15::ofp_packet_out)) {
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->buffer_id_ = ntoh32(po->buffer_id);
-    this->in_port_ = ntoh32(po->in_port);
     this->actions_len_ = ntoh16(po->actions_len);
-    this->actions_.length(this->actions_len_);
     size_t len = this->actions_len_;
-    uint8_t * p = buffer + sizeof(struct of13::ofp_packet_out);
-    this->actions_.unpack13(p);
-    len = this->length_
-        - (sizeof(struct of13::ofp_packet_out) + this->actions_len_);
+    uint8_t *p = buffer
+        + (sizeof(struct of15::ofp_packet_out) - sizeof(struct of15::ofp_match));
+    this->match_.unpack(p);
+    p += ROUND_UP(this->match_.length(), 8);
+    this->actions_.length(this->actions_len_);
+    this->actions_.unpack15(p);
+    size_t used_up = sizeof(struct of15::ofp_packet_out) - sizeof(struct of15::ofp_match) + ROUND_UP(this->match_.length(), 8) + this->actions_len_;
+    len = this->length_ - used_up;
     /*Reuse p to calculate the packet data position */
-    p = buffer + sizeof(struct of13::ofp_packet_out) + this->actions_len_;
-    this->data_len_ = len;
+    p += this->actions_len_;
+    this->data_len_ = len; //Aman
     if (len) {
-        this->data_ = new uint8_t[len];
+        this->data_ = ::operator new(len);
         memcpy(this->data_, p, len);
     }
     return 0;
 }
 
+OXMTLV * PacketOut::get_oxm_field(uint8_t field) {
+    return this->match_.oxm_field(field);
+}
+
+void PacketOut::add_oxm_field(OXMTLV &field) {
+    this->match_.add_oxm_field(field);
+}
+
+void PacketOut::add_oxm_field(OXMTLV *field) {
+    this->match_.add_oxm_field(field);
+}
+
 PacketIn::PacketIn()
-    : PacketInCommon(of13::OFP_VERSION, of13::OFPT_PACKET_IN),
+    : PacketInCommon(of15::OFP_VERSION, of15::OFPT_PACKET_IN),
       table_id_(0),
       cookie_(0) {
 }
 
 PacketIn::PacketIn(uint32_t xid, uint32_t buffer_id, uint16_t total_len,
     uint8_t reason, uint8_t table_id, uint64_t cookie)
-    : PacketInCommon(of13::OFP_VERSION, of13::OFPT_PACKET_IN, xid, buffer_id,
+    : PacketInCommon(of15::OFP_VERSION, of15::OFPT_PACKET_IN, xid, buffer_id,
           total_len, reason),
       table_id_(table_id),
       cookie_(cookie) {
 }
 
 uint16_t PacketIn::length() {
-    return sizeof(struct of13::ofp_packet_in) - sizeof(struct of13::ofp_match)
-        + ROUND_UP(this->match_.length(), 8) + this->data_len_ + 2;
+    return sizeof(struct of15::ofp_packet_in) - sizeof(struct of15::ofp_match)
+        + ROUND_UP(this->match_.length(), 8) + 2 + this->data_len_; //Aman (added 2 pad bytes)
 }
 
 bool PacketIn::operator==(const PacketIn &other) const {
@@ -460,18 +477,18 @@ bool PacketIn::operator!=(const PacketIn &other) const {
     return !(*this == other);
 }
 
-uint8_t* PacketIn::pack() {
+uint8_t* PacketIn::pack() { //Aman
     this->length_ = length();
     uint8_t* buffer = OFMsg::pack();
     size_t padding = ROUND_UP(this->match_.length(), 8) - this->match_.length();
-    struct of13::ofp_packet_in *pi = (struct of13::ofp_packet_in*) buffer;
+    struct of15::ofp_packet_in *pi = (struct of15::ofp_packet_in*) buffer;
     pi->buffer_id = hton32(this->buffer_id_);
     pi->total_len = hton16(this->total_len_);
     pi->reason = this->reason_;
     pi->table_id = this->table_id_;
     pi->cookie = hton64(this->cookie_);
     uint8_t *p = buffer
-        + (sizeof(struct of13::ofp_packet_in) - sizeof(struct of13::ofp_match));
+        + (sizeof(struct of15::ofp_packet_in) - sizeof(struct of15::ofp_match));
     this->match_.pack(p);
     p += match_.length();
     memset(p, 0x0, padding);
@@ -481,8 +498,8 @@ uint8_t* PacketIn::pack() {
     return buffer;
 }
 
-of_error PacketIn::unpack(uint8_t *buffer) {
-    struct of13::ofp_packet_in *pi = (struct of13::ofp_packet_in*) buffer;
+of_error PacketIn::unpack(uint8_t *buffer) { //Aman
+    struct of15::ofp_packet_in *pi = (struct of15::ofp_packet_in*) buffer;
     OFMsg::unpack(buffer);
     this->buffer_id_ = ntoh32(pi->buffer_id);
     this->total_len_ = ntoh16(pi->total_len);
@@ -490,14 +507,14 @@ of_error PacketIn::unpack(uint8_t *buffer) {
     this->table_id_ = pi->table_id;
     this->cookie_ = ntoh64(pi->cookie);
     uint8_t *p = buffer
-        + (sizeof(struct of13::ofp_packet_in) - sizeof(struct of13::ofp_match));
+        + (sizeof(struct of15::ofp_packet_in) - sizeof(struct of15::ofp_match));
     this->match_.unpack(p);
-    p += ROUND_UP(this->match_.length(), 8);
+    p += ROUND_UP(this->match_.length(), 8) + 2;
     this->data_len_ = this->length_
-        - (sizeof(struct of13::ofp_packet_in) - sizeof(struct of13::ofp_match)
+        - (sizeof(struct of15::ofp_packet_in) - sizeof(struct of15::ofp_match)
             + ROUND_UP(this->match_.length(), 8) + 2);
     this->data_ = ::operator new(this->data_len_);
-    memcpy(this->data_, p + 2, this->data_len_);
+    memcpy(this->data_, p, this->data_len_);
     return 0;
 }
 
@@ -514,32 +531,33 @@ void PacketIn::add_oxm_field(OXMTLV *field) {
 }
 
 FlowMod::FlowMod()
-    : FlowModCommon(of13::OFP_VERSION, of13::OFPT_FLOW_MOD),
+    : FlowModCommon(of15::OFP_VERSION, of15::OFPT_FLOW_MOD),
       instructions_(),
       command_(0),
       cookie_mask_(0),
       table_id_(0),
       out_port_(0),
-      out_group_(0) {
+      out_group_(0),
+      importance_(0) {
 }
 
 FlowMod::FlowMod(uint32_t xid, uint64_t cookie, uint64_t cookie_mask,
     uint8_t table_id, uint8_t command, uint16_t idle_timeout,
     uint16_t hard_timeout, uint16_t priority, uint32_t buffer_id,
-    uint32_t out_port, uint32_t out_group, uint16_t flags)
-    : FlowModCommon(of13::OFP_VERSION, of13::OFPT_FLOW_MOD, xid, cookie,
+    uint32_t out_port, uint32_t out_group, uint16_t flags, uint16_t importance)
+    : FlowModCommon(of15::OFP_VERSION, of15::OFPT_FLOW_MOD, xid, cookie,
           idle_timeout, hard_timeout, priority, buffer_id, flags),
       instructions_(),
       command_(command),
       cookie_mask_(cookie_mask),
       table_id_(table_id),
       out_port_(out_port),
-      out_group_(out_group) {
-    ;
+      out_group_(out_group),
+      importance_(importance) {
 }
 
 uint16_t FlowMod::length() {
-    return sizeof(struct of13::ofp_flow_mod) - sizeof(struct of13::ofp_match)
+    return sizeof(struct of15::ofp_flow_mod) - sizeof(struct of15::ofp_match)
         + ROUND_UP(this->match_.length(), 8) + this->instructions_.length();
 }
 
@@ -561,7 +579,7 @@ uint8_t* FlowMod::pack() {
     this->length_ = length();
     uint8_t* buffer = OFMsg::pack();
     size_t padding = ROUND_UP(this->match_.length(), 8) - this->match_.length();
-    struct of13::ofp_flow_mod *fm = (struct of13::ofp_flow_mod*) buffer;
+    struct of15::ofp_flow_mod *fm = (struct of15::ofp_flow_mod*) buffer;
     fm->cookie = hton64(this->cookie_);
     fm->cookie_mask = hton64(this->cookie_mask_);
     fm->table_id = this->table_id_;
@@ -573,9 +591,9 @@ uint8_t* FlowMod::pack() {
     fm->out_port = hton32(this->out_port_);
     fm->out_group = hton32(this->out_group_);
     fm->flags = hton16(this->flags_);
-    memset(fm->pad, 0x0, 2);
+//    memset(fm->pad, 0x0, 2);//Aman
     uint8_t *p = buffer
-        + (sizeof(struct of13::ofp_flow_mod) - sizeof(struct of13::ofp_match));
+        + (sizeof(struct of15::ofp_flow_mod) - sizeof(struct of15::ofp_match));
     this->match_.pack(p);
     p += this->match_.length();
     memset(p, 0x0, padding);
@@ -587,9 +605,9 @@ uint8_t* FlowMod::pack() {
 of_error FlowMod::unpack(uint8_t *buffer) {
     OFMsg::unpack(buffer);
     of_error err;
-    struct of13::ofp_flow_mod *fm = (struct of13::ofp_flow_mod*) buffer;
-    if (this->length_ < sizeof(struct of13::ofp_flow_mod)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+    struct of15::ofp_flow_mod *fm = (struct of15::ofp_flow_mod*) buffer;
+    if (this->length_ < sizeof(struct of15::ofp_flow_mod)) {
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->cookie_ = ntoh64(fm->cookie);
     this->cookie_mask_ = ntoh64(fm->cookie_mask);
@@ -602,16 +620,17 @@ of_error FlowMod::unpack(uint8_t *buffer) {
     this->out_port_ = ntoh32(fm->out_port);
     this->out_group_ = ntoh32(fm->out_group);
     this->flags_ = ntoh16(fm->flags);
+    this->importance_ = ntoh16(fm->importance);
     uint8_t *p = buffer
-        + (sizeof(struct of13::ofp_flow_mod) - sizeof(struct of13::ofp_match));
+        + (sizeof(struct of15::ofp_flow_mod) - sizeof(struct of15::ofp_match));
     err = this->match_.unpack(p);
     if (err) {
         return err;
     }
     this->instructions_.length(
         this->length_
-            - ((sizeof(struct of13::ofp_flow_mod)
-                - sizeof(struct of13::ofp_match))
+            - ((sizeof(struct of15::ofp_flow_mod)
+                - sizeof(struct of15::ofp_match))
                 + ROUND_UP(this->match_.length(), 8)));
     p += ROUND_UP(this->match_.length(), 8);
     this->instructions_.unpack(p);
@@ -622,7 +641,7 @@ OXMTLV * FlowMod::get_oxm_field(uint8_t field) {
     return this->match_.oxm_field(field);
 }
 
-void FlowMod::match(of13::Match match) {
+void FlowMod::match(of15::Match match) {
     this->match_ = match;
     this->length_ += this->match_.length();
 }
@@ -651,44 +670,55 @@ void FlowMod::add_instruction(Instruction* inst) {
 }
 
 FlowRemoved::FlowRemoved()
-    : FlowRemovedCommon(of13::OFP_VERSION, of13::OFPT_FLOW_REMOVED),
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_FLOW_REMOVED),
       table_id_(0),
-      hard_timeout_(0) {
+      reason_(0),
+      priority_(0),
+      idle_timeout_(0),
+      hard_timeout_(0),
+      cookie_(0) {
 }
 
-FlowRemoved::FlowRemoved(uint32_t xid, uint64_t cookie, uint16_t priority,
-    uint8_t reason, uint8_t table_id, uint32_t duration_sec,
-    uint32_t duration_nsec, uint16_t idle_timeout, uint16_t hard_timeout,
-    uint64_t packet_count, uint64_t byte_count)
-    : FlowRemovedCommon(of13::OFP_VERSION, of13::OFPT_FLOW_REMOVED, xid, cookie,
-          priority, reason, duration_sec, duration_nsec, idle_timeout,
-          packet_count, byte_count),
+FlowRemoved::FlowRemoved(uint32_t xid, uint8_t table_id, uint8_t reason, uint16_t priority,
+        uint16_t idle_timeout, uint16_t hard_timeout, uint64_t cookie)
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_FLOW_REMOVED, xid),
       table_id_(table_id),
-      hard_timeout_(hard_timeout) {
+      reason_(reason),
+      priority_(priority),
+      idle_timeout_(idle_timeout),
+      hard_timeout_(hard_timeout),
+      cookie_(cookie) {
 }
 
-FlowRemoved::FlowRemoved(uint32_t xid, uint64_t cookie, uint16_t priority,
-    uint8_t reason, uint8_t table_id, uint32_t duration_sec,
-    uint32_t duration_nsec, uint16_t idle_timeout, uint16_t hard_timeout,
-    uint64_t packet_count, uint64_t byte_count, of13::Match match)
-    : FlowRemovedCommon(of13::OFP_VERSION, of13::OFPT_FLOW_REMOVED, xid, cookie,
-        priority, reason, duration_sec, duration_nsec, idle_timeout,
-        packet_count, byte_count) {
-    this->table_id_ = table_id;
-    this->hard_timeout_ = hard_timeout;
-    this->match_ = match;
+FlowRemoved::FlowRemoved(uint32_t xid, uint8_t table_id, uint8_t reason, uint16_t priority,
+        uint16_t idle_timeout, uint16_t hard_timeout, uint64_t cookie, of15::Match match,
+        of15::Stats stats)
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_FLOW_REMOVED, xid),
+      table_id_(table_id),
+      reason_(reason),
+      priority_(priority),
+      idle_timeout_(idle_timeout),
+      hard_timeout_(hard_timeout),
+      cookie_(cookie),
+      match_(match),
+      stats_(stats) {
 }
 
 uint16_t FlowRemoved::length() {
-    return sizeof(struct of13::ofp_flow_removed)
-        - sizeof(struct of13::ofp_match) + ROUND_UP(this->match_.length(), 8);
+    return sizeof(struct of15::ofp_flow_removed)
+        - sizeof(struct of15::ofp_match) + ROUND_UP(this->match_.length(), 8)
+        + ROUND_UP(this->stats_.length(), 8);
 }
 
 bool FlowRemoved::operator==(const FlowRemoved &other) const {
-    return ((FlowRemovedCommon::operator==(other))
-        && (this->table_id_ == other.table_id_)
+    return ((this->table_id_ == other.table_id_)
+        && (this->reason_ == other.reason_)
+        && (this->priority_ == other.priority_)
+        && (this->idle_timeout_ == other.idle_timeout_)
         && (this->hard_timeout_ == other.hard_timeout_)
-        && (this->match_ == other.match_));
+        && (this->cookie_ == other.cookie_)
+        && (this->match_ == other.match_)
+        && (this->stats_ == other.stats_));
 }
 
 bool FlowRemoved::operator!=(const FlowRemoved &other) const {
@@ -698,56 +728,56 @@ bool FlowRemoved::operator!=(const FlowRemoved &other) const {
 uint8_t* FlowRemoved::pack() {
     this->length_ = length();
     uint8_t* buffer = OFMsg::pack();
-    size_t padding = ROUND_UP(this->match_.length(), 8) - this->match_.length();
-    struct of13::ofp_flow_removed *fr = (struct of13::ofp_flow_removed*) buffer;
-    fr->cookie = hton64(this->cookie_);
-    fr->priority = hton16(this->priority_);
-    fr->reason = this->reason_;
+    struct of15::ofp_flow_removed *fr = (struct of15::ofp_flow_removed*) buffer;
     fr->table_id = this->table_id_;
-    fr->duration_sec = hton32(this->duration_sec_);
-    fr->duration_nsec = hton32(this->duration_nsec_);
+    fr->reason = this->reason_;
+    fr->priority = hton16(this->priority_);
     fr->idle_timeout = hton16(this->idle_timeout_);
-    fr->hard_timeout = hton32(this->hard_timeout_);
-    fr->packet_count = hton64(this->packet_count_);
-    fr->byte_count = hton64(this->byte_count_);
+    fr->hard_timeout = hton16(this->hard_timeout_);
+    fr->cookie = hton64(this->cookie_);
     uint8_t *p = buffer
-        + (sizeof(struct of13::ofp_flow_removed)
-            - sizeof(struct of13::ofp_match));
+        + (sizeof(struct of15::ofp_flow_removed)
+            - sizeof(struct of15::ofp_match));
     this->match_.pack(p);
     p += this->match_.length();
+    size_t padding = ROUND_UP(this->match_.length(), 8) - this->match_.length();
+    memset(p, 0x0, padding);
+    p += padding;
+    this->stats_.pack(p);
+    p += this->stats_.length();
+    padding = ROUND_UP(this->stats_.length(), 8) - this->stats_.length();
     memset(p, 0x0, padding);
     return buffer;
 }
 
 of_error FlowRemoved::unpack(uint8_t *buffer) {
-    struct of13::ofp_flow_removed *fr = (struct of13::ofp_flow_removed*) buffer;
+    struct of15::ofp_flow_removed *fr = (struct of15::ofp_flow_removed*) buffer;
     OFMsg::unpack(buffer);
-    this->cookie_ = ntoh64(fr->cookie);
-    this->priority_ = ntoh16(fr->priority);
-    this->reason_ = fr->reason;
     this->table_id_ = fr->table_id;
-    this->duration_sec_ = ntoh32(fr->duration_sec);
-    this->duration_nsec_ = ntoh32(fr->duration_nsec);
+    this->reason_ = fr->reason;
+    this->priority_ = ntoh16(fr->priority);
     this->idle_timeout_ = ntoh16(fr->idle_timeout);
-    this->hard_timeout_ = ntoh32(fr->hard_timeout);
-    this->packet_count_ = ntoh64(fr->packet_count);
-    this->byte_count_ = ntoh64(fr->byte_count);
+    this->hard_timeout_ = ntoh16(fr->hard_timeout);
+    this->cookie_ = ntoh64(fr->cookie);
+
     uint8_t *p = buffer
-        + (sizeof(struct of13::ofp_flow_removed)
-            - sizeof(struct of13::ofp_match));
+        + (sizeof(struct of15::ofp_flow_removed)
+            - sizeof(struct of15::ofp_match));
     this->match_.unpack(p);
+    p += ROUND_UP(this->match_.length(), 8);
+    this->stats_.unpack(p);
     return 0;
 }
 
 PortStatus::PortStatus()
-    : PortStatusCommon(of13::OFP_VERSION, of13::OFPT_PORT_STATUS) {
-    this->length_ = sizeof(struct of13::ofp_port_status);
+    : PortStatusCommon(of15::OFP_VERSION, of15::OFPT_PORT_STATUS) {
+    this->length_ = sizeof(struct of15::ofp_port_status);
 }
 
-PortStatus::PortStatus(uint32_t xid, uint8_t reason, of13::Port desc)
-    : PortStatusCommon(of13::OFP_VERSION, of13::OFPT_PORT_STATUS, xid, reason),
+PortStatus::PortStatus(uint32_t xid, uint8_t reason, of15::Port desc)
+    : PortStatusCommon(of15::OFP_VERSION, of15::OFPT_PORT_STATUS, xid, reason),
       desc_(desc) {
-    this->length_ = sizeof(struct of13::ofp_port_status);
+    this->length_ = sizeof(struct of15::ofp_port_status);
 }
 
 bool PortStatus::operator==(const PortStatus &other) const {
@@ -761,7 +791,7 @@ bool PortStatus::operator!=(const PortStatus &other) const {
 
 uint8_t* PortStatus::pack() {
     uint8_t* buffer = OFMsg::pack();
-    struct of13::ofp_port_status *ps = (struct of13::ofp_port_status *) buffer;
+    struct of15::ofp_port_status *ps = (struct of15::ofp_port_status *) buffer;
     ps->reason = this->reason_;
     memset(ps->pad, 0x0, 7);
     this->desc_.pack(buffer + (sizeof(struct ofp_header) + 8));
@@ -769,7 +799,7 @@ uint8_t* PortStatus::pack() {
 }
 
 of_error PortStatus::unpack(uint8_t *buffer) {
-    struct of13::ofp_port_status *ps = (struct of13::ofp_port_status *) buffer;
+    struct of15::ofp_port_status *ps = (struct of15::ofp_port_status *) buffer;
     OFMsg::unpack(buffer);
     this->reason_ = ps->reason;
     this->desc_.unpack(buffer + (sizeof(struct ofp_header) + 8));
@@ -777,16 +807,16 @@ of_error PortStatus::unpack(uint8_t *buffer) {
 }
 
 PortMod::PortMod()
-    : PortModCommon(of13::OFP_VERSION, of13::OFPT_PORT_MOD) {
-    this->length_ = sizeof(struct of13::ofp_port_mod);
+    : PortModCommon(of15::OFP_VERSION, of15::OFPT_PORT_MOD) {
+    this->length_ = sizeof(struct of15::ofp_port_mod);
 }
 
 PortMod::PortMod(uint32_t xid, uint32_t port_no, EthAddress hw_addr,
     uint32_t config, uint32_t mask, uint32_t advertise)
-    : PortModCommon(of13::OFP_VERSION, of13::OFPT_PORT_MOD, xid, hw_addr,
+    : PortModCommon(of15::OFP_VERSION, of15::OFPT_PORT_MOD, xid, hw_addr,
           config, mask, advertise),
       port_no_(port_no) {
-    this->length_ = sizeof(struct of13::ofp_port_mod);
+    this->length_ = sizeof(struct of15::ofp_port_mod);
 }
 
 bool PortMod::operator==(const PortMod &other) const {
@@ -800,54 +830,54 @@ bool PortMod::operator!=(const PortMod &other) const {
 
 uint8_t* PortMod::pack() {
     uint8_t* buffer = OFMsg::pack();
-    struct of13::ofp_port_mod *pm = (struct of13::ofp_port_mod *) buffer;
+    struct of15::ofp_port_mod *pm = (struct of15::ofp_port_mod *) buffer;
     pm->port_no = hton32(this->port_no_);
     memset(pm->pad, 0x0, 4);
     memcpy(pm->hw_addr, hw_addr_.get_data(), OFP_ETH_ALEN);
     memset(pm->pad, 0x0, 2);
     pm->config = hton32(this->config_);
     pm->mask = hton32(this->mask_);
-    pm->advertise = hton32(this->advertise_);
+//    pm->advertise = hton32(this->advertise_); //Aman
     memset(pm->pad, 0x0, 4);
     return buffer;
 }
 
 of_error PortMod::unpack(uint8_t* buffer) {
-    struct of13::ofp_port_mod *pm = (struct of13::ofp_port_mod *) buffer;
-    if (pm->header.length < sizeof(struct of13::ofp_port_mod)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+    struct of15::ofp_port_mod *pm = (struct of15::ofp_port_mod *) buffer;
+    if (pm->header.length < sizeof(struct of15::ofp_port_mod)) {
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     OFMsg::unpack(buffer);
     this->port_no_ = ntoh32(pm->port_no);
     this->hw_addr_ = EthAddress(pm->hw_addr);
     this->config_ = ntoh32(pm->config);
     this->mask_ = ntoh32(pm->mask);
-    this->advertise_ = ntoh32(pm->advertise);
+//    this->advertise_ = ntoh32(pm->advertise); //Aman
     return 0;
 }
 
 GroupMod::GroupMod()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_GROUP_MOD) {
-    this->length_ = sizeof(struct of13::ofp_group_mod);
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_GROUP_MOD) {
+    this->length_ = sizeof(struct of15::ofp_group_mod);
 }
 
 GroupMod::GroupMod(uint32_t xid, uint16_t command, uint8_t type,
     uint32_t group_id)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_GROUP_MOD, xid),
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_GROUP_MOD, xid),
       command_(command),
       group_type_(type),
       group_id_(group_id) {
-    this->length_ = sizeof(struct of13::ofp_group_mod);
+    this->length_ = sizeof(struct of15::ofp_group_mod);
 }
 
 GroupMod::GroupMod(uint32_t xid, uint16_t command, uint8_t type,
     uint32_t group_id, std::vector<Bucket> buckets)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_GROUP_MOD, xid) {
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_GROUP_MOD, xid) {
     this->command_ = command;
     this->group_type_ = type;
     this->group_id_ = group_id;
     this->buckets_ = buckets;
-    this->length_ = sizeof(struct of13::ofp_group_mod) + buckets_len();
+    this->length_ = sizeof(struct of15::ofp_group_mod) + buckets_len();
 }
 
 bool GroupMod::operator==(const GroupMod &other) const {
@@ -883,7 +913,7 @@ size_t GroupMod::buckets_len() {
 
 uint8_t* GroupMod::pack() {
     uint8_t* buffer = OFMsg::pack();
-    struct of13::ofp_group_mod *gm = (struct of13::ofp_group_mod*) buffer;
+    struct of15::ofp_group_mod *gm = (struct of15::ofp_group_mod*) buffer;
     gm->command = hton16(this->command_);
     gm->type = this->group_type_;
     gm->group_id = hton32(this->group_id_);
@@ -897,10 +927,10 @@ uint8_t* GroupMod::pack() {
 }
 
 of_error GroupMod::unpack(uint8_t *buffer) {
-    struct of13::ofp_group_mod *gm = (struct of13::ofp_group_mod*) buffer;
+    struct of15::ofp_group_mod *gm = (struct of15::ofp_group_mod*) buffer;
     OFMsg::unpack(buffer);
-    if (this->length_ < sizeof(struct of13::ofp_group_mod)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+    if (this->length_ < sizeof(struct of15::ofp_group_mod)) {
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->command_ = ntoh16(gm->command);
     this->group_type_ = gm->type;
@@ -918,15 +948,15 @@ of_error GroupMod::unpack(uint8_t *buffer) {
 }
 
 TableMod::TableMod()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_TABLE_MOD) {
-    this->length_ = sizeof(struct of13::ofp_table_mod);
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_TABLE_MOD) {
+    this->length_ = sizeof(struct of15::ofp_table_mod);
 }
 
 TableMod::TableMod(uint32_t xid, uint8_t table_id, uint32_t config)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_TABLE_MOD, xid),
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_TABLE_MOD, xid),
       table_id_(table_id),
       config_(config) {
-    this->length_ = sizeof(struct of13::ofp_table_mod);
+    this->length_ = sizeof(struct of15::ofp_table_mod);
 }
 
 bool TableMod::operator==(const TableMod &other) const {
@@ -940,7 +970,7 @@ bool TableMod::operator!=(const TableMod &other) const {
 
 uint8_t* TableMod::pack() {
     uint8_t* buffer = OFMsg::pack();
-    struct of13::ofp_table_mod *tm = (struct of13::ofp_table_mod*) buffer;
+    struct of15::ofp_table_mod *tm = (struct of15::ofp_table_mod*) buffer;
     tm->table_id = this->table_id_;
     memset(tm->pad, 0x0, 3);
     tm->config = hton32(this->config_);
@@ -948,10 +978,10 @@ uint8_t* TableMod::pack() {
 }
 
 of_error TableMod::unpack(uint8_t *buffer) {
-    struct of13::ofp_table_mod *tm = (struct of13::ofp_table_mod*) buffer;
+    struct of15::ofp_table_mod *tm = (struct of15::ofp_table_mod*) buffer;
     OFMsg::unpack(buffer);
-    if (this->length_ < sizeof(struct of13::ofp_table_mod)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+    if (this->length_ < sizeof(struct of15::ofp_table_mod)) {
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->table_id_ = tm->table_id;
     this->config_ = ntoh32(tm->config);
@@ -959,21 +989,21 @@ of_error TableMod::unpack(uint8_t *buffer) {
 }
 
 MultipartRequest::MultipartRequest()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_MULTIPART_REQUEST) {
-    this->length_ = sizeof(struct of13::ofp_multipart_request);
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_MULTIPART_REQUEST) {
+    this->length_ = sizeof(struct of15::ofp_multipart_request);
 }
 
 MultipartRequest::MultipartRequest(uint16_t type)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_MULTIPART_REQUEST),
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_MULTIPART_REQUEST),
       mpart_type_(type) {
-    this->length_ = sizeof(struct of13::ofp_multipart_request);
+    this->length_ = sizeof(struct of15::ofp_multipart_request);
 }
 
 MultipartRequest::MultipartRequest(uint32_t xid, uint16_t type, uint16_t flags)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_MULTIPART_REQUEST, xid),
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_MULTIPART_REQUEST, xid),
       mpart_type_(type),
       flags_(flags) {
-    this->length_ = sizeof(struct of13::ofp_multipart_request);
+    this->length_ = sizeof(struct of15::ofp_multipart_request);
 }
 
 bool MultipartRequest::operator==(const MultipartRequest &other) const {
@@ -988,8 +1018,8 @@ bool MultipartRequest::operator!=(const MultipartRequest &other) const {
 
 uint8_t* MultipartRequest::pack() {
     uint8_t* buffer = OFMsg::pack();
-    struct of13::ofp_multipart_request * mr =
-        (struct of13::ofp_multipart_request *) buffer;
+    struct of15::ofp_multipart_request * mr =
+        (struct of15::ofp_multipart_request *) buffer;
     mr->type = hton16(this->mpart_type_);
     mr->flags = hton16(this->flags_);
     memset(mr->pad, 0x0, 4);
@@ -997,11 +1027,11 @@ uint8_t* MultipartRequest::pack() {
 }
 
 of_error MultipartRequest::unpack(uint8_t *buffer) {
-    struct of13::ofp_multipart_request * mr =
-        (struct of13::ofp_multipart_request *) buffer;
+    struct of15::ofp_multipart_request * mr =
+        (struct of15::ofp_multipart_request *) buffer;
     OFMsg::unpack(buffer);
-    if (this->length_ < sizeof(struct of13::ofp_multipart_request)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+    if (this->length_ < sizeof(struct of15::ofp_multipart_request)) {
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->mpart_type_ = ntoh16(mr->type);
     this->flags_ = ntoh16(mr->flags);
@@ -1009,23 +1039,23 @@ of_error MultipartRequest::unpack(uint8_t *buffer) {
 }
 
 MultipartReply::MultipartReply()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_MULTIPART_REPLY) {
-    this->length_ = sizeof(struct of13::ofp_multipart_reply);
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_MULTIPART_REPLY) {
+    this->length_ = sizeof(struct of15::ofp_multipart_reply);
 }
 
 MultipartReply::MultipartReply(uint16_t type)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_MULTIPART_REPLY),
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_MULTIPART_REPLY),
       mpart_type_(type) {
-    this->length_ = sizeof(struct of13::ofp_multipart_reply);
+    this->length_ = sizeof(struct of15::ofp_multipart_reply);
 }
 
 MultipartReply::MultipartReply(uint32_t xid, uint16_t type, uint16_t flags)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_MULTIPART_REPLY, xid),
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_MULTIPART_REPLY, xid),
       mpart_type_(type),
       flags_(flags) {
     this->mpart_type_ = type;
     this->flags_ = flags;
-    this->length_ = sizeof(struct of13::ofp_multipart_reply);
+    this->length_ = sizeof(struct of15::ofp_multipart_reply);
 }
 
 bool MultipartReply::operator==(const MultipartReply &other) const {
@@ -1040,8 +1070,8 @@ bool MultipartReply::operator!=(const MultipartReply &other) const {
 
 uint8_t* MultipartReply::pack() {
     uint8_t* buffer = OFMsg::pack();
-    struct of13::ofp_multipart_reply * mr =
-        (struct of13::ofp_multipart_reply *) buffer;
+    struct of15::ofp_multipart_reply * mr =
+        (struct of15::ofp_multipart_reply *) buffer;
     mr->type = hton16(this->mpart_type_);
     mr->flags = hton16(this->flags_);
     memset(mr->pad, 0x0, 4);
@@ -1049,8 +1079,8 @@ uint8_t* MultipartReply::pack() {
 }
 
 of_error MultipartReply::unpack(uint8_t *buffer) {
-    struct of13::ofp_multipart_reply * mr =
-        (struct of13::ofp_multipart_reply *) buffer;
+    struct of15::ofp_multipart_reply * mr =
+        (struct of15::ofp_multipart_reply *) buffer;
     OFMsg::unpack(buffer);
     this->mpart_type_ = ntoh16(mr->type);
     this->flags_ = ntoh16(mr->flags);
@@ -1062,7 +1092,7 @@ MultipartRequestDesc::MultipartRequestDesc()
 }
 
 MultipartRequestDesc::MultipartRequestDesc(uint32_t xid, uint16_t flags)
-    : MultipartRequest(xid, of13::OFPMP_DESC, flags) {
+    : MultipartRequest(xid, of15::OFPMP_DESC, flags) {
 }
 
 uint8_t* MultipartRequestDesc::pack() {
@@ -1075,13 +1105,13 @@ of_error MultipartRequestDesc::unpack(uint8_t *buffer) {
 }
 
 MultipartReplyDesc::MultipartReplyDesc()
-    : MultipartReply(of13::OFPMP_DESC) {
+    : MultipartReply(of15::OFPMP_DESC) {
     this->length_ += sizeof(struct ofp_desc);
 }
 
 MultipartReplyDesc::MultipartReplyDesc(uint32_t xid, uint16_t flags,
     SwitchDesc desc)
-    : MultipartReply(xid, of13::OFPMP_DESC, flags) {
+    : MultipartReply(xid, of15::OFPMP_DESC, flags) {
     this->desc_ = desc;
     this->length_ += sizeof(struct ofp_desc);
 }
@@ -1089,7 +1119,7 @@ MultipartReplyDesc::MultipartReplyDesc(uint32_t xid, uint16_t flags,
 MultipartReplyDesc::MultipartReplyDesc(uint32_t xid, uint16_t flags,
     std::string mfr_desc, std::string hw_desc, std::string sw_desc,
     std::string serial_num, std::string dp_desc)
-    : MultipartReply(xid, of13::OFPMP_DESC, flags),
+    : MultipartReply(xid, of15::OFPMP_DESC, flags),
       desc_(mfr_desc, hw_desc, sw_desc, serial_num, dp_desc) {
 
     this->length_ += sizeof(struct ofp_desc);
@@ -1105,39 +1135,39 @@ bool MultipartReplyDesc::operator!=(const MultipartReplyDesc &other) const {
 
 uint8_t* MultipartReplyDesc::pack() {
     uint8_t* buffer = MultipartReply::pack();
-    this->desc_.pack(buffer + sizeof(struct of13::ofp_multipart_reply));
+    this->desc_.pack(buffer + sizeof(struct of15::ofp_multipart_reply));
     return buffer;
 }
 
 of_error MultipartReplyDesc::unpack(uint8_t *buffer) {
     MultipartReply::unpack(buffer);
-    this->desc_.unpack(buffer + sizeof(struct of13::ofp_multipart_reply));
+    this->desc_.unpack(buffer + sizeof(struct of15::ofp_multipart_reply));
     return 0;
 }
 
 MultipartRequestFlow::MultipartRequestFlow()
-    : MultipartRequest(OFPMP_FLOW) {
-    this->length_ += sizeof(struct of13::ofp_flow_stats_request)
-        - sizeof(struct of13::ofp_match);
+    : MultipartRequest(of15::OFPMP_FLOW_DESC) { //Aman
+    this->length_ += sizeof(struct of15::ofp_flow_stats_request)
+        - sizeof(struct of15::ofp_match);
 }
 
 MultipartRequestFlow::MultipartRequestFlow(uint32_t xid, uint16_t flags,
     uint8_t table_id, uint32_t out_port, uint32_t out_group, uint64_t cookie,
     uint64_t cookie_mask)
-    : MultipartRequest(xid, of13::OFPMP_FLOW, flags),
+    : MultipartRequest(xid, of15::OFPMP_FLOW_DESC, flags), //Aman
       table_id_(table_id),
       out_port_(out_port),
       out_group_(out_group),
       cookie_(cookie),
       cookie_mask_(cookie_mask) {
-    this->length_ += sizeof(struct of13::ofp_flow_stats_request)
-        - sizeof(struct of13::ofp_match);
+    this->length_ += sizeof(struct of15::ofp_flow_stats_request)
+        - sizeof(struct of15::ofp_match);
 }
 
 MultipartRequestFlow::MultipartRequestFlow(uint32_t xid, uint16_t flags,
     uint8_t table_id, uint32_t out_port, uint32_t out_group, uint64_t cookie,
-    uint64_t cookie_mask, of13::Match match)
-    : MultipartRequest(xid, of13::OFPMP_FLOW, flags),
+    uint64_t cookie_mask, of15::Match match)
+    : MultipartRequest(xid, of15::OFPMP_FLOW_DESC, flags), //Aman
       table_id_(table_id),
       out_port_(out_port),
       out_group_(out_group),
@@ -1145,8 +1175,8 @@ MultipartRequestFlow::MultipartRequestFlow(uint32_t xid, uint16_t flags,
       cookie_mask_(cookie_mask),
       match_(match) {
 
-    this->length_ += sizeof(struct of13::ofp_flow_stats_request)
-        - sizeof(struct of13::ofp_match) + match.length();
+    this->length_ += sizeof(struct of15::ofp_flow_stats_request)
+        - sizeof(struct of15::ofp_match) + match.length();
 }
 
 bool MultipartRequestFlow::operator==(const MultipartRequestFlow &other) const {
@@ -1163,7 +1193,7 @@ bool MultipartRequestFlow::operator!=(const MultipartRequestFlow &other) const {
     return !(*this == other);
 }
 
-void MultipartRequestFlow::match(of13::Match match) {
+void MultipartRequestFlow::match(of15::Match match) {
     this->match_ = match;
     this->length_ += match.length();
 }
@@ -1178,19 +1208,19 @@ void MultipartRequestFlow::add_oxm_field(OXMTLV* field) {
 
 uint8_t* MultipartRequestFlow::pack() {
     size_t padding = ROUND_UP(
-        sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_flow_stats_request)
-            - sizeof(struct of13::ofp_match) + this->match_.length(), 8)
-        - (sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_flow_stats_request)
-            - sizeof(struct of13::ofp_match) + this->match_.length());
-    this->length_ = sizeof(struct of13::ofp_multipart_request)
-        + sizeof(struct of13::ofp_flow_stats_request)
-        - sizeof(struct of13::ofp_match) + ROUND_UP(this->match_.length(), 8);
+        sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_flow_stats_request)
+            - sizeof(struct of15::ofp_match) + this->match_.length(), 8)
+        - (sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_flow_stats_request)
+            - sizeof(struct of15::ofp_match) + this->match_.length());
+    this->length_ = sizeof(struct of15::ofp_multipart_request)
+        + sizeof(struct of15::ofp_flow_stats_request)
+        - sizeof(struct of15::ofp_match) + ROUND_UP(this->match_.length(), 8);
     uint8_t* buffer = MultipartRequest::pack();
-    struct of13::ofp_flow_stats_request *fs =
-        (struct of13::ofp_flow_stats_request*) (buffer
-            + sizeof(struct of13::ofp_multipart_request));
+    struct of15::ofp_flow_stats_request *fs =
+        (struct of15::ofp_flow_stats_request*) (buffer
+            + sizeof(struct of15::ofp_multipart_request));
     fs->table_id = this->table_id_;
     memset(fs->pad, 0x0, 3);
     fs->out_port = hton32(this->out_port_);
@@ -1199,9 +1229,9 @@ uint8_t* MultipartRequestFlow::pack() {
     fs->cookie = hton64(this->cookie_);
     fs->cookie_mask = hton64(this->cookie_mask_);
     uint8_t *p = buffer
-        + (sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_flow_stats_request)
-            - sizeof(struct of13::ofp_match));
+        + (sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_flow_stats_request)
+            - sizeof(struct of15::ofp_match));
     this->match_.pack(p);
     p += this->match_.length();
     memset(p, 0x0, padding);
@@ -1209,14 +1239,14 @@ uint8_t* MultipartRequestFlow::pack() {
 }
 
 of_error MultipartRequestFlow::unpack(uint8_t *buffer) {
-    struct of13::ofp_flow_stats_request *fs =
-        (struct of13::ofp_flow_stats_request*) (buffer
-            + sizeof(struct of13::ofp_multipart_request));
+    struct of15::ofp_flow_stats_request *fs =
+        (struct of15::ofp_flow_stats_request*) (buffer
+            + sizeof(struct of15::ofp_multipart_request));
     MultipartRequest::unpack(buffer);
     if (this->length_
-        < sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_flow_stats_request)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        < sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_flow_stats_request)) {
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->table_id_ = fs->table_id;
     this->out_port_ = ntoh32(fs->out_port);
@@ -1224,27 +1254,28 @@ of_error MultipartRequestFlow::unpack(uint8_t *buffer) {
     this->cookie_ = ntoh64(fs->cookie);
     this->cookie_mask_ = ntoh64(fs->cookie_mask);
     uint8_t *p = buffer
-        + (sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_flow_stats_request)
-            - sizeof(struct of13::ofp_match));
+        + (sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_flow_stats_request)
+            - sizeof(struct of15::ofp_match));
     this->match_.unpack(p);
     return 0;
 }
 
+//TODO: Add support for other flow request types
 MultipartReplyFlow::MultipartReplyFlow()
-    : MultipartReply(OFPMP_FLOW) {
+    : MultipartReply(of15::OFPMP_FLOW_DESC) { //Aman
 }
 
 MultipartReplyFlow::MultipartReplyFlow(uint32_t xid, uint16_t flags)
-    : MultipartReply(xid, of13::OFPMP_FLOW, flags) {
+    : MultipartReply(xid, of15::OFPMP_FLOW_DESC, flags) { //Aman
 }
 
 MultipartReplyFlow::MultipartReplyFlow(uint32_t xid, uint16_t flags,
-    std::vector<of13::FlowStats> flow_stats)
-    : MultipartReply(xid, of13::OFPMP_FLOW, flags),
+    std::vector<of15::FlowStats> flow_stats)
+    : MultipartReply(xid, of15::OFPMP_FLOW_DESC, flags), //Aman
       flow_stats_(flow_stats) {
     size_t stats_len = 0;
-    for (std::vector<of13::FlowStats>::iterator it = this->flow_stats_.begin();
+    for (std::vector<of15::FlowStats>::iterator it = this->flow_stats_.begin();
         it != this->flow_stats_.end(); ++it) {
         stats_len += it->length();
     }
@@ -1262,8 +1293,8 @@ bool MultipartReplyFlow::operator!=(const MultipartReplyFlow &other) const {
 
 uint8_t* MultipartReplyFlow::pack() {
     uint8_t* buffer = MultipartReply::pack();
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
-    for (std::vector<of13::FlowStats>::iterator it = this->flow_stats_.begin();
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
+    for (std::vector<of15::FlowStats>::iterator it = this->flow_stats_.begin();
         it != this->flow_stats_.end(); ++it) {
         it->pack(p);
         p += it->length();
@@ -1273,10 +1304,10 @@ uint8_t* MultipartReplyFlow::pack() {
 
 of_error MultipartReplyFlow::unpack(uint8_t *buffer) {
     MultipartReply::unpack(buffer);
-    size_t len = this->length_ - sizeof(struct of13::ofp_multipart_reply);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
+    size_t len = this->length_ - sizeof(struct of15::ofp_multipart_reply);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
     while (len) {
-        of13::FlowStats stat;
+        of15::FlowStats stat;
         stat.unpack(p);
         this->flow_stats_.push_back(stat);
         p += stat.length();
@@ -1285,40 +1316,40 @@ of_error MultipartReplyFlow::unpack(uint8_t *buffer) {
     return 0;
 }
 
-void MultipartReplyFlow::flow_stats(std::vector<of13::FlowStats> flow_stats) {
+void MultipartReplyFlow::flow_stats(std::vector<of15::FlowStats> flow_stats) {
     this->flow_stats_ = flow_stats;
     this->length_ += this->flow_stats_.size()
-        * sizeof(struct of13::ofp_flow_stats);
+        * sizeof(struct of15::ofp_flow_stats);
 }
 
-void MultipartReplyFlow::add_flow_stats(of13::FlowStats stats) {
+void MultipartReplyFlow::add_flow_stats(of15::FlowStats stats) {
     this->flow_stats_.push_back(stats);
     this->length_ += stats.length();
 }
 
 MultipartRequestAggregate::MultipartRequestAggregate()
-    : MultipartRequest(OFPMP_AGGREGATE) {
-    this->length_ += sizeof(struct of13::ofp_aggregate_stats_request)
-        - sizeof(struct of13::ofp_match);
+    : MultipartRequest(of15::OFPMP_AGGREGATE_STATS) { //Aman
+    this->length_ += sizeof(struct of15::ofp_aggregate_stats_request)
+        - sizeof(struct of15::ofp_match);
 }
 
 MultipartRequestAggregate::MultipartRequestAggregate(uint32_t xid,
     uint16_t flags, uint8_t table_id, uint32_t out_port, uint32_t out_group,
     uint64_t cookie, uint64_t cookie_mask)
-    : MultipartRequest(xid, of13::OFPMP_AGGREGATE, flags),
+    : MultipartRequest(xid, of15::OFPMP_AGGREGATE_STATS, flags), //Aman
       table_id_(table_id),
       out_port_(out_port),
       out_group_(out_group),
       cookie_(cookie),
       cookie_mask_(cookie_mask) {
-    this->length_ += sizeof(struct of13::ofp_aggregate_stats_request)
-        - sizeof(struct of13::ofp_match);
+    this->length_ += sizeof(struct of15::ofp_aggregate_stats_request)
+        - sizeof(struct of15::ofp_match);
 }
 
 MultipartRequestAggregate::MultipartRequestAggregate(uint32_t xid,
     uint16_t flags, uint8_t table_id, uint32_t out_port, uint32_t out_group,
-    uint64_t cookie, uint64_t cookie_mask, of13::Match match)
-    : MultipartRequest(xid, of13::OFPMP_AGGREGATE, flags),
+    uint64_t cookie, uint64_t cookie_mask, of15::Match match)
+    : MultipartRequest(xid, of15::OFPMP_AGGREGATE_STATS, flags), //Aman
       table_id_(table_id),
       out_port_(out_port),
       out_group_(out_group),
@@ -1345,12 +1376,12 @@ bool MultipartRequestAggregate::operator!=(
 }
 
 uint16_t MultipartRequestAggregate::length() {
-    return sizeof(struct of13::ofp_multipart_request)
-        + sizeof(struct of13::ofp_aggregate_stats_request)
-        - sizeof(struct of13::ofp_match) + ROUND_UP(this->match_.length(), 8);
+    return sizeof(struct of15::ofp_multipart_request)
+        + sizeof(struct of15::ofp_aggregate_stats_request)
+        - sizeof(struct of15::ofp_match) + ROUND_UP(this->match_.length(), 8);
 }
 
-void MultipartRequestAggregate::match(of13::Match match) {
+void MultipartRequestAggregate::match(of15::Match match) {
     this->match_ = match;
     this->length_ += ROUND_UP(match_.length(), 8);
 }
@@ -1365,14 +1396,14 @@ void MultipartRequestAggregate::add_oxm_field(OXMTLV* field) {
 
 uint8_t* MultipartRequestAggregate::pack() {
     size_t padding = length()
-        - (sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_aggregate_stats_request)
-            - sizeof(struct of13::ofp_match) + this->match_.length());
+        - (sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_aggregate_stats_request)
+            - sizeof(struct of15::ofp_match) + this->match_.length());
     this->length_ = length();
     uint8_t* buffer = MultipartRequest::pack();
-    struct of13::ofp_aggregate_stats_request *fs =
-        (struct of13::ofp_aggregate_stats_request*) (buffer
-            + sizeof(struct of13::ofp_multipart_request));
+    struct of15::ofp_aggregate_stats_request *fs =
+        (struct of15::ofp_aggregate_stats_request*) (buffer
+            + sizeof(struct of15::ofp_multipart_request));
     fs->table_id = this->table_id_;
     memset(fs->pad, 0x0, 3);
     fs->out_port = hton32(this->out_port_);
@@ -1381,9 +1412,9 @@ uint8_t* MultipartRequestAggregate::pack() {
     fs->cookie = hton64(this->cookie_);
     fs->cookie_mask = hton64(this->cookie_mask_);
     uint8_t *p = buffer
-        + (sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_aggregate_stats_request)
-            - sizeof(struct of13::ofp_match));
+        + (sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_aggregate_stats_request)
+            - sizeof(struct of15::ofp_match));
     this->match_.pack(p);
     p += this->match_.length();
     memset(p, 0x0, padding);
@@ -1391,14 +1422,14 @@ uint8_t* MultipartRequestAggregate::pack() {
 }
 
 of_error MultipartRequestAggregate::unpack(uint8_t *buffer) {
-    struct of13::ofp_aggregate_stats_request *fs =
-        (struct of13::ofp_aggregate_stats_request*) (buffer
-            + sizeof(struct of13::ofp_multipart_request));
+    struct of15::ofp_aggregate_stats_request *fs =
+        (struct of15::ofp_aggregate_stats_request*) (buffer
+            + sizeof(struct of15::ofp_multipart_request));
     MultipartRequest::unpack(buffer);
     if (this->length_
-        < sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_aggregate_stats_request)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        < sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_aggregate_stats_request)) {
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->table_id_ = fs->table_id;
     this->out_port_ = ntoh32(fs->out_port);
@@ -1406,25 +1437,25 @@ of_error MultipartRequestAggregate::unpack(uint8_t *buffer) {
     this->cookie_ = ntoh64(fs->cookie);
     this->cookie_mask_ = ntoh64(fs->cookie_mask);
     uint8_t *p = buffer
-        + (sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_aggregate_stats_request)
-            - sizeof(struct of13::ofp_match));
+        + (sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_aggregate_stats_request)
+            - sizeof(struct of15::ofp_match));
     this->match_.unpack(p);
     return 0;
 }
 
 MultipartReplyAggregate::MultipartReplyAggregate()
-    : MultipartReply(OFPMP_AGGREGATE) {
-    this->length_ += sizeof(struct of13::ofp_aggregate_stats_reply);
+    : MultipartReply(of15::OFPMP_AGGREGATE_STATS) { //Aman
+    this->length_ += sizeof(struct of15::ofp_aggregate_stats_reply);
 }
 
 MultipartReplyAggregate::MultipartReplyAggregate(uint32_t xid, uint16_t flags,
     uint64_t packet_count, uint64_t byte_count, uint32_t flow_count)
-    : MultipartReply(xid, of13::OFPMP_AGGREGATE, flags),
+    : MultipartReply(xid, of15::OFPMP_AGGREGATE_STATS, flags), //Aman
       packet_count_(packet_count),
       byte_count_(byte_count),
       flow_count_(flow_count) {
-    this->length_ += sizeof(struct of13::ofp_aggregate_stats_reply);
+    this->length_ += sizeof(struct of15::ofp_aggregate_stats_reply);
 }
 
 bool MultipartReplyAggregate::operator==(
@@ -1442,32 +1473,35 @@ bool MultipartReplyAggregate::operator!=(
 
 uint8_t* MultipartReplyAggregate::pack() {
     uint8_t* buffer = MultipartReply::pack();
-    struct of13::ofp_aggregate_stats_reply *ar =
-        (struct of13::ofp_aggregate_stats_reply*) (buffer
-            + sizeof(struct of13::ofp_multipart_reply));
-    ar->packet_count = hton64(this->packet_count_);
-    ar->byte_count = hton64(this->byte_count_);
-    ar->flow_count = hton32(this->flow_count_);
+    struct of15::ofp_aggregate_stats_reply *ar =
+        (struct of15::ofp_aggregate_stats_reply*) (buffer
+            + sizeof(struct of15::ofp_multipart_reply));
+//Aman
+//    ar->packet_count = hton64(this->packet_count_);
+//    ar->byte_count = hton64(this->byte_count_);
+//    ar->flow_count = hton32(this->flow_count_);
     return buffer;
 }
 
 of_error MultipartReplyAggregate::unpack(uint8_t *buffer) {
-    struct of13::ofp_aggregate_stats_reply *ar =
-        (struct of13::ofp_aggregate_stats_reply*) (buffer
-            + sizeof(struct of13::ofp_multipart_reply));
+    struct of15::ofp_aggregate_stats_reply *ar =
+        (struct of15::ofp_aggregate_stats_reply*) (buffer
+            + sizeof(struct of15::ofp_multipart_reply));
     MultipartReply::unpack(buffer);
-    this->packet_count_ = ntoh64(ar->packet_count);
-    this->byte_count_ = ntoh64(ar->byte_count);
-    this->flow_count_ = ntoh32(ar->flow_count);
+//Aman
+//    this->packet_count_ = ntoh64(ar->packet_count);
+//    this->byte_count_ = ntoh64(ar->byte_count);
+//    this->flow_count_ = ntoh32(ar->flow_count);
     return 0;
 }
 
+//TODO: Add other table request/reply type support
 MultipartRequestTable::MultipartRequestTable()
-    : MultipartRequest(OFPMP_TABLE) {
+    : MultipartRequest(of15::OFPMP_TABLE_DESC) { //Aman
 }
 
 MultipartRequestTable::MultipartRequestTable(uint32_t xid, uint16_t flags)
-    : MultipartRequest(xid, of13::OFPMP_TABLE, flags) {
+    : MultipartRequest(xid, of15::OFPMP_TABLE_DESC, flags) { //Aman
 }
 
 uint8_t* MultipartRequestTable::pack() {
@@ -1480,18 +1514,18 @@ of_error MultipartRequestTable::unpack(uint8_t *buffer) {
 }
 
 MultipartReplyTable::MultipartReplyTable()
-    : MultipartReply(OFPMP_TABLE) {
+    : MultipartReply(of15::OFPMP_TABLE_DESC) { //Aman
 }
 
 MultipartReplyTable::MultipartReplyTable(uint32_t xid, uint16_t flags)
-    : MultipartReply(xid, of13::OFPMP_TABLE, flags) {
+    : MultipartReply(xid, of15::OFPMP_TABLE_DESC, flags) { //Aman
 }
 
 MultipartReplyTable::MultipartReplyTable(uint32_t xid, uint16_t flags,
-    std::vector<of13::TableStats> table_stats)
-    : MultipartReply(xid, of13::OFPMP_TABLE, flags),
+    std::vector<of15::TableStats> table_stats)
+    : MultipartReply(xid, of15::OFPMP_TABLE_DESC, flags), //Aman
       table_stats_(table_stats) {
-    this->length_ += table_stats.size() * sizeof(struct of13::ofp_table_stats);
+    this->length_ += table_stats.size() * sizeof(struct of15::ofp_table_stats);
 
 }
 
@@ -1507,49 +1541,49 @@ bool MultipartReplyTable::operator!=(const MultipartReplyTable &other) const {
 uint8_t* MultipartReplyTable::pack() {
     uint8_t* buffer = MultipartReply::pack();
     uint8_t *p = buffer + sizeof(struct ofp_multipart_request);
-    for (std::vector<of13::TableStats>::iterator it =
+    for (std::vector<of15::TableStats>::iterator it =
         this->table_stats_.begin(); it != this->table_stats_.end(); ++it) {
         it->pack(p);
-        p += sizeof(struct of13::ofp_table_stats);
+        p += sizeof(struct of15::ofp_table_stats);
     }
     return buffer;
 }
 
 of_error MultipartReplyTable::unpack(uint8_t *buffer) {
     MultipartReply::unpack(buffer);
-    uint8_t len = this->length_ - sizeof(struct of13::ofp_multipart_request);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_request);
+    uint8_t len = this->length_ - sizeof(struct of15::ofp_multipart_request);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_request);
     while (len) {
         TableStats stat;
         stat.unpack(p);
         this->table_stats_.push_back(stat);
-        p += sizeof(struct of13::ofp_table_stats);
-        len -= sizeof(struct of13::ofp_table_stats);
+        p += sizeof(struct of15::ofp_table_stats);
+        len -= sizeof(struct of15::ofp_table_stats);
     }
     return 0;
 }
 
 void MultipartReplyTable::table_stats(
-    std::vector<of13::TableStats> table_stats) {
+    std::vector<of15::TableStats> table_stats) {
     this->table_stats_ = table_stats;
-    this->length_ += table_stats.size() * sizeof(struct of13::ofp_table_stats);
+    this->length_ += table_stats.size() * sizeof(struct of15::ofp_table_stats);
 }
 
-void MultipartReplyTable::add_table_stat(of13::TableStats stat) {
+void MultipartReplyTable::add_table_stat(of15::TableStats stat) {
     this->table_stats_.push_back(stat);
-    this->length_ += sizeof(struct of13::ofp_table_stats);
+    this->length_ += sizeof(struct of15::ofp_table_stats);
 }
 
 MultipartRequestPortStats::MultipartRequestPortStats()
-    : MultipartRequest(OFPMP_PORT_STATS) {
-    this->length_ += sizeof(struct of13::ofp_port_stats_request);
+    : MultipartRequest(of15::OFPMP_PORT_STATS) { //Aman
+    this->length_ += sizeof(struct of15::ofp_port_stats_prop_header); //Aman
 }
 
 MultipartRequestPortStats::MultipartRequestPortStats(uint32_t xid,
     uint16_t flags, uint32_t port_no)
-    : MultipartRequest(xid, of13::OFPMP_PORT_STATS, flags),
+    : MultipartRequest(xid, of15::OFPMP_PORT_STATS, flags),
       port_no_(port_no) {
-    this->length_ += sizeof(struct of13::ofp_port_stats_request);
+    this->length_ += sizeof(struct of15::ofp_port_stats_prop_header); //Aman
 
 }
 ;
@@ -1567,23 +1601,23 @@ bool MultipartRequestPortStats::operator!=(
 
 uint8_t* MultipartRequestPortStats::pack() {
     uint8_t* buffer = MultipartRequest::pack();
-    struct of13::ofp_port_stats_request *ps =
-        (struct of13::ofp_port_stats_request *) (buffer
-            + sizeof(struct of13::ofp_multipart_request));
+    struct of15::ofp_port_stats *ps = //Aman
+        (struct of15::ofp_port_stats *) (buffer //Aman
+            + sizeof(struct of15::ofp_multipart_request));
     ps->port_no = hton32(this->port_no_);
     memset(ps->pad, 0x0, 4);
     return buffer;
 }
 
 of_error MultipartRequestPortStats::unpack(uint8_t *buffer) {
-    struct of13::ofp_port_stats_request *ps =
-        (struct of13::ofp_port_stats_request *) (buffer
-            + sizeof(struct of13::ofp_multipart_request));
+    struct of15::ofp_port_stats *ps = //Aman
+        (struct of15::ofp_port_stats *) (buffer //Aman
+            + sizeof(struct of15::ofp_multipart_request));
     MultipartRequest::unpack(buffer);
     if (this->length_
-        < sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_port_stats_request)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        < sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_port_stats)) { //Aman
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->port_no_ = ntoh32(ps->port_no);
     return 0;
@@ -1594,14 +1628,14 @@ MultipartReplyPortStats::MultipartReplyPortStats()
 }
 
 MultipartReplyPortStats::MultipartReplyPortStats(uint32_t xid, uint16_t flags)
-    : MultipartReply(xid, of13::OFPMP_PORT_STATS, flags) {
+    : MultipartReply(xid, of15::OFPMP_PORT_STATS, flags) {
 }
 
 MultipartReplyPortStats::MultipartReplyPortStats(uint32_t xid, uint16_t flags,
-    std::vector<of13::PortStats> port_stats)
-    : MultipartReply(xid, of13::OFPMP_PORT_STATS, flags) {
+    std::vector<of15::PortStats> port_stats)
+    : MultipartReply(xid, of15::OFPMP_PORT_STATS, flags) {
     this->port_stats_ = port_stats;
-    this->length_ = port_stats.size() * sizeof(struct of13::ofp_port_stats);
+    this->length_ = port_stats.size() * sizeof(struct of15::ofp_port_stats);
 
 }
 
@@ -1619,50 +1653,51 @@ bool MultipartReplyPortStats::operator!=(
 uint8_t* MultipartReplyPortStats::pack() {
     uint8_t* buffer = MultipartReply::pack();
     uint8_t *p = buffer + sizeof(struct ofp_multipart_request);
-    for (std::vector<of13::PortStats>::iterator it = this->port_stats_.begin();
+    for (std::vector<of15::PortStats>::iterator it = this->port_stats_.begin();
         it != this->port_stats_.end(); ++it) {
         it->pack(p);
-        p += sizeof(struct of13::ofp_port_stats);
+        p += sizeof(struct of15::ofp_port_stats);
     }
     return buffer;
 }
 
 of_error MultipartReplyPortStats::unpack(uint8_t *buffer) {
     MultipartReply::unpack(buffer);
-    uint8_t len = this->length_ - sizeof(struct of13::ofp_multipart_request);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_request);
+    uint8_t len = this->length_ - sizeof(struct of15::ofp_multipart_request);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_request);
     while (len) {
-        of13::PortStats stat;
+        of15::PortStats stat;
         stat.unpack(p);
         this->port_stats_.push_back(stat);
-        p += sizeof(struct of13::ofp_port_stats);
-        len -= sizeof(struct of13::ofp_port_stats);
+        p += sizeof(struct of15::ofp_port_stats);
+        len -= sizeof(struct of15::ofp_port_stats);
     }
     return 0;
 }
 
 void MultipartReplyPortStats::port_stats(
-    std::vector<of13::PortStats> port_stats) {
+    std::vector<of15::PortStats> port_stats) {
     this->port_stats_ = port_stats;
-    this->length_ += port_stats.size() * sizeof(struct of13::ofp_port_stats);
+    this->length_ += port_stats.size() * sizeof(struct of15::ofp_port_stats);
 }
 
-void MultipartReplyPortStats::add_port_stat(of13::PortStats stat) {
+void MultipartReplyPortStats::add_port_stat(of15::PortStats stat) {
     this->port_stats_.push_back(stat);
-    this->length_ += sizeof(struct of13::ofp_port_stats);
+    this->length_ += sizeof(struct of15::ofp_port_stats);
 }
 
+//TODO handle other OFPMP_QUEUE_ requests
 MultipartRequestQueue::MultipartRequestQueue()
-    : MultipartRequest(OFPMP_QUEUE) {
-    this->length_ += sizeof(struct of13::ofp_queue_stats_request);
+    : MultipartRequest(of15::OFPMP_QUEUE_STATS) { //Aman
+    this->length_ += sizeof(struct of15::ofp_queue_stats); //Aman
 }
 
 MultipartRequestQueue::MultipartRequestQueue(uint32_t xid, uint16_t flags,
     uint32_t port_no, uint32_t queue_id)
-    : MultipartRequest(xid, of13::OFPMP_QUEUE, flags),
+    : MultipartRequest(xid, of15::OFPMP_QUEUE_STATS, flags), //Aman
       port_no_(port_no),
       queue_id_(queue_id) {
-    this->length_ += sizeof(struct of13::ofp_queue_stats_request);
+    this->length_ += sizeof(struct of15::ofp_queue_stats); //Aman
 }
 
 bool MultipartRequestQueue::operator==(
@@ -1679,42 +1714,43 @@ bool MultipartRequestQueue::operator!=(
 
 uint8_t* MultipartRequestQueue::pack() {
     uint8_t* buffer = MultipartRequest::pack();
-    struct of13::ofp_queue_stats_request* qs =
-        (of13::ofp_queue_stats_request*) (buffer
-            + sizeof(struct of13::ofp_multipart_request));
+    struct of15::ofp_queue_stats* qs = //Aman
+        (of15::ofp_queue_stats*) (buffer //Aman
+            + sizeof(struct of15::ofp_multipart_request));
     qs->port_no = hton32(this->port_no_);
     qs->queue_id = hton32(this->queue_id_);
     return buffer;
 }
 
 of_error MultipartRequestQueue::unpack(uint8_t *buffer) {
-    struct of13::ofp_queue_stats_request* qs =
-        (of13::ofp_queue_stats_request*) (buffer
-            + sizeof(struct of13::ofp_multipart_request));
+    struct of15::ofp_queue_stats* qs = //Aman
+        (of15::ofp_queue_stats*) (buffer -//Aman
+            + sizeof(struct of15::ofp_multipart_request));
     MultipartRequest::unpack(buffer);
     if (this->length_
-        < sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_queue_stats_request)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        < sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_queue_stats)) { //Aman
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->port_no_ = ntoh32(qs->port_no);
     this->queue_id_ = ntoh32(qs->queue_id);
     return 0;
 }
 
+//TODO: Handle other OFPMP_QUEUE_ reply types
 MultipartReplyQueue::MultipartReplyQueue()
-    : MultipartReply(OFPMP_QUEUE) {
+    : MultipartReply(of15::OFPMP_QUEUE_STATS) { //Aman
 }
 
 MultipartReplyQueue::MultipartReplyQueue(uint32_t xid, uint16_t flags)
-    : MultipartReply(xid, of13::OFPMP_QUEUE, flags) {
+    : MultipartReply(xid, of15::OFPMP_QUEUE_STATS, flags) { //Aman
 }
 
 MultipartReplyQueue::MultipartReplyQueue(uint32_t xid, uint16_t flags,
-    std::vector<of13::QueueStats> queue_stats)
-    : MultipartReply(xid, of13::OFPMP_QUEUE, flags),
-      queue_stats_(queue_stats) {
-    this->length_ += queue_stats.size() * sizeof(struct of13::ofp_queue_stats);
+    std::vector<of15::QueueStats> queue_stats)
+    : MultipartReply(xid, of15::OFPMP_QUEUE_STATS, flags), //Aman
+      queue_stats_(queue_stats) { //Aman
+    this->length_ += queue_stats.size() * sizeof(struct of15::ofp_queue_stats);
 }
 
 bool MultipartReplyQueue::operator==(const MultipartReplyQueue &other) const {
@@ -1728,50 +1764,51 @@ bool MultipartReplyQueue::operator!=(const MultipartReplyQueue &other) const {
 
 uint8_t* MultipartReplyQueue::pack() {
     uint8_t* buffer = MultipartReply::pack();
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
-    for (std::vector<of13::QueueStats>::iterator it =
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
+    for (std::vector<of15::QueueStats>::iterator it =
         this->queue_stats_.begin(); it != this->queue_stats_.end(); ++it) {
         it->pack(p);
-        p += sizeof(struct of13::ofp_queue_stats);
+        p += sizeof(struct of15::ofp_queue_stats);
     }
     return buffer;
 }
 
 of_error MultipartReplyQueue::unpack(uint8_t *buffer) {
     MultipartReply::unpack(buffer);
-    int len = this->length_ - sizeof(struct of13::ofp_multipart_reply);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
+    int len = this->length_ - sizeof(struct of15::ofp_multipart_reply);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
     while (len > 0) {
-        of13::QueueStats stat;
+        of15::QueueStats stat;
         stat.unpack(p);
         this->queue_stats_.push_back(stat);
-        p += sizeof(struct of13::ofp_queue_stats);
-        len -= sizeof(struct of13::ofp_queue_stats);
+        p += sizeof(struct of15::ofp_queue_stats);
+        len -= sizeof(struct of15::ofp_queue_stats);
     }
     return 0;
 }
 
 void MultipartReplyQueue::queue_stats(
-    std::vector<of13::QueueStats> queue_stats) {
+    std::vector<of15::QueueStats> queue_stats) {
     this->queue_stats_ = queue_stats;
-    this->length_ += queue_stats.size() * sizeof(struct of13::ofp_queue_stats);
+    this->length_ += queue_stats.size() * sizeof(struct of15::ofp_queue_stats);
 }
 
-void MultipartReplyQueue::add_queue_stat(of13::QueueStats stat) {
+void MultipartReplyQueue::add_queue_stat(of15::QueueStats stat) {
     this->queue_stats_.push_back(stat);
-    this->length_ += sizeof(struct of13::ofp_queue_stats);
+    this->length_ += sizeof(struct of15::ofp_queue_stats); //Aman
 }
 
+//TODO: Handle other OFPMP_GROUP_ request types
 MultipartRequestGroup::MultipartRequestGroup()
-    : MultipartRequest(OFPMP_GROUP) {
-    this->length_ += sizeof(struct of13::ofp_group_stats_request);
+    : MultipartRequest(of15::OFPMP_GROUP_STATS) { //Aman
+    this->length_ += sizeof(struct of15::ofp_group_stats); //Aman
 }
 
 MultipartRequestGroup::MultipartRequestGroup(uint32_t xid, uint16_t flags,
     uint32_t group_id)
-    : MultipartRequest(xid, of13::OFPMP_GROUP, flags),
+    : MultipartRequest(xid, of15::OFPMP_GROUP_STATS, flags),
       group_id_(group_id) {
-    this->length_ += sizeof(struct of13::ofp_group_stats_request);
+    this->length_ += sizeof(struct of15::ofp_group_stats); //Aman
 }
 
 bool MultipartRequestGroup::operator==(
@@ -1787,39 +1824,40 @@ bool MultipartRequestGroup::operator!=(
 
 uint8_t* MultipartRequestGroup::pack() {
     uint8_t* buffer = MultipartRequest::pack();
-    struct of13::ofp_group_stats_request* gs =
-        (of13::ofp_group_stats_request*) (buffer
-            + sizeof(struct of13::ofp_multipart_request));
+    struct of15::ofp_group_stats* gs = //Aman
+        (of15::ofp_group_stats*) (buffer //Aman
+            + sizeof(struct of15::ofp_multipart_request));
     gs->group_id = hton32(this->group_id_);
     memset(gs->pad, 0x0, 4);
     return buffer;
 }
 
 of_error MultipartRequestGroup::unpack(uint8_t *buffer) {
-    struct of13::ofp_group_stats_request* gs =
-        (of13::ofp_group_stats_request*) (buffer
-            + sizeof(struct of13::ofp_multipart_request));
+    struct of15::ofp_group_stats* gs = //Aman
+        (of15::ofp_group_stats*) (buffer //Aman
+            + sizeof(struct of15::ofp_multipart_request));
     MultipartRequest::unpack(buffer);
     if (this->length_
-        < sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_group_stats_request)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        < sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_group_stats)) { //Aman
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->group_id_ = ntoh32(gs->group_id);
     return 0;
 }
 
+//TODO: Handler other OFPMP_GROUP_ reply types
 MultipartReplyGroup::MultipartReplyGroup()
-    : MultipartReply(OFPMP_GROUP) {
+    : MultipartReply(of15::OFPMP_GROUP_STATS) { //Aman
 }
 
 MultipartReplyGroup::MultipartReplyGroup(uint32_t xid, uint16_t flags)
-    : MultipartReply(xid, of13::OFPMP_GROUP, flags) {
+    : MultipartReply(xid, of15::OFPMP_GROUP_STATS, flags) { //Aman
 }
 
 MultipartReplyGroup::MultipartReplyGroup(uint32_t xid, uint16_t flags,
-    std::vector<of13::GroupStats> group_stats)
-    : MultipartReply(xid, of13::OFPMP_GROUP, flags),
+    std::vector<of15::GroupStats> group_stats)
+    : MultipartReply(xid, of15::OFPMP_GROUP_STATS, flags), //Aman
       group_stats_(group_stats) {
     this->length_ += group_stats_len();
 }
@@ -1835,8 +1873,8 @@ bool MultipartReplyGroup::operator!=(const MultipartReplyGroup &other) const {
 
 uint8_t* MultipartReplyGroup::pack() {
     uint8_t* buffer = MultipartReply::pack();
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
-    for (std::vector<of13::GroupStats>::iterator it =
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
+    for (std::vector<of15::GroupStats>::iterator it =
         this->group_stats_.begin(); it != this->group_stats_.end(); ++it) {
         it->pack(p);
         p += it->length();
@@ -1846,10 +1884,10 @@ uint8_t* MultipartReplyGroup::pack() {
 
 of_error MultipartReplyGroup::unpack(uint8_t *buffer) {
     MultipartReply::unpack(buffer);
-    uint8_t len = this->length_ - sizeof(struct of13::ofp_multipart_reply);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
+    uint8_t len = this->length_ - sizeof(struct of15::ofp_multipart_reply);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
     while (len) {
-        of13::GroupStats stat;
+        of15::GroupStats stat;
         stat.unpack(p);
         this->group_stats_.push_back(stat);
         p += stat.length();
@@ -1859,19 +1897,19 @@ of_error MultipartReplyGroup::unpack(uint8_t *buffer) {
 }
 
 void MultipartReplyGroup::group_stats(
-    std::vector<of13::GroupStats> group_stats) {
+    std::vector<of15::GroupStats> group_stats) {
     this->group_stats_ = group_stats;
     this->length_ += group_stats_len();
 }
 
-void MultipartReplyGroup::add_group_stats(of13::GroupStats stat) {
+void MultipartReplyGroup::add_group_stats(of15::GroupStats stat) {
     this->group_stats_.push_back(stat);
     this->length_ += stat.length();
 }
 
 size_t MultipartReplyGroup::group_stats_len() {
     size_t len;
-    for (std::vector<of13::GroupStats>::iterator it =
+    for (std::vector<of15::GroupStats>::iterator it =
         this->group_stats_.begin(); it != this->group_stats_.end(); ++it) {
         len += it->length();
     }
@@ -1884,7 +1922,7 @@ MultipartRequestGroupDesc::MultipartRequestGroupDesc()
 
 MultipartRequestGroupDesc::MultipartRequestGroupDesc(uint32_t xid,
     uint16_t flags)
-    : MultipartRequest(xid, of13::OFPMP_GROUP_DESC, flags) {
+    : MultipartRequest(xid, of15::OFPMP_GROUP_DESC, flags) {
 }
 
 uint8_t* MultipartRequestGroupDesc::pack() {
@@ -1901,12 +1939,12 @@ MultipartReplyGroupDesc::MultipartReplyGroupDesc()
 }
 
 MultipartReplyGroupDesc::MultipartReplyGroupDesc(uint32_t xid, uint16_t flags)
-    : MultipartReply(xid, of13::OFPMP_GROUP_DESC, flags) {
+    : MultipartReply(xid, of15::OFPMP_GROUP_DESC, flags) {
 }
 
 MultipartReplyGroupDesc::MultipartReplyGroupDesc(uint32_t xid, uint16_t flags,
-    std::vector<of13::GroupDesc> group_desc)
-    : MultipartReply(xid, of13::OFPMP_GROUP_DESC, flags),
+    std::vector<of15::GroupDesc> group_desc)
+    : MultipartReply(xid, of15::OFPMP_GROUP_DESC, flags),
       group_desc_(group_desc) {
     this->length_ += desc_len();
 }
@@ -1924,8 +1962,8 @@ bool MultipartReplyGroupDesc::operator!=(
 
 uint8_t* MultipartReplyGroupDesc::pack() {
     uint8_t* buffer = MultipartReply::pack();
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
-    for (std::vector<of13::GroupDesc>::iterator it = this->group_desc_.begin();
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
+    for (std::vector<of15::GroupDesc>::iterator it = this->group_desc_.begin();
         it != this->group_desc_.end(); ++it) {
         it->pack(p);
         p += it->length();
@@ -1935,10 +1973,10 @@ uint8_t* MultipartReplyGroupDesc::pack() {
 
 of_error MultipartReplyGroupDesc::unpack(uint8_t *buffer) {
     MultipartReply::unpack(buffer);
-    uint8_t len = this->length_ - sizeof(struct of13::ofp_multipart_reply);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
+    uint8_t len = this->length_ - sizeof(struct of15::ofp_multipart_reply);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
     while (len) {
-        of13::GroupDesc desc;
+        of15::GroupDesc desc;
         desc.unpack(p);
         this->group_desc_.push_back(desc);
         p += desc.length();
@@ -1948,12 +1986,12 @@ of_error MultipartReplyGroupDesc::unpack(uint8_t *buffer) {
 }
 
 void MultipartReplyGroupDesc::group_desc(
-    std::vector<of13::GroupDesc> group_desc) {
+    std::vector<of15::GroupDesc> group_desc) {
     this->group_desc_ = group_desc;
     this->length_ += desc_len();
 }
 
-void MultipartReplyGroupDesc::add_group_desc(of13::GroupDesc desc) {
+void MultipartReplyGroupDesc::add_group_desc(of15::GroupDesc desc) {
     this->group_desc_.push_back(desc);
     this->length_ += desc.length();
 }
@@ -1973,7 +2011,7 @@ MultipartRequestGroupFeatures::MultipartRequestGroupFeatures()
 
 MultipartRequestGroupFeatures::MultipartRequestGroupFeatures(uint32_t xid,
     uint16_t flags)
-    : MultipartRequest(xid, of13::OFPMP_GROUP_FEATURES, flags) {
+    : MultipartRequest(xid, of15::OFPMP_GROUP_FEATURES, flags) {
 }
 
 uint8_t* MultipartRequestGroupFeatures::pack() {
@@ -1987,15 +2025,14 @@ of_error MultipartRequestGroupFeatures::unpack(uint8_t *buffer) {
 
 MultipartReplyGroupFeatures::MultipartReplyGroupFeatures()
     : MultipartReply(OFPMP_GROUP_FEATURES) {
-    this->length_ += sizeof(struct of13::ofp_group_features);
 }
 
 MultipartReplyGroupFeatures::MultipartReplyGroupFeatures(uint32_t xid,
-    uint16_t flags, of13::GroupFeatures features)
-    : MultipartReply(xid, of13::OFPMP_GROUP_FEATURES, flags),
+    uint16_t flags, of15::GroupFeatures features)
+    : MultipartReply(xid, of15::OFPMP_GROUP_FEATURES, flags),
       features_(features) {
     this->features_ = features;
-    this->length_ += sizeof(struct of13::ofp_group_features);
+    this->length_ += sizeof(struct of15::ofp_group_features);
 }
 
 bool MultipartReplyGroupFeatures::operator==(
@@ -2011,26 +2048,27 @@ bool MultipartReplyGroupFeatures::operator!=(
 
 uint8_t* MultipartReplyGroupFeatures::pack() {
     uint8_t* buffer = MultipartReply::pack();
-    this->features_.pack(buffer + sizeof(struct of13::ofp_multipart_reply));
+    this->features_.pack(buffer + sizeof(struct of15::ofp_multipart_reply));
     return buffer;
 }
 
 of_error MultipartReplyGroupFeatures::unpack(uint8_t *buffer) {
     MultipartReply::unpack(buffer);
-    this->features_.unpack(buffer + sizeof(struct of13::ofp_multipart_reply));
+    this->features_.unpack(buffer + sizeof(struct of15::ofp_multipart_reply));
     return 0;
 }
 
+//TODO: Handle other OFPMP_METER_ request types
 MultipartRequestMeter::MultipartRequestMeter()
-    : MultipartRequest(OFPMP_METER) {
-    this->length_ += sizeof(struct of13::ofp_meter_multipart_request);
+    : MultipartRequest(of15::OFPMP_METER_STATS) { //Aman
+    this->length_ += sizeof(struct of15::ofp_meter_multipart_request);
 }
 
 MultipartRequestMeter::MultipartRequestMeter(uint32_t xid, uint16_t flags,
     uint32_t meter_id)
-    : MultipartRequest(xid, of13::OFPMP_METER, flags),
+    : MultipartRequest(xid, of15::OFPMP_METER_STATS, flags), //Aman
       meter_id_(meter_id) {
-    this->length_ += sizeof(struct of13::ofp_meter_multipart_request);
+    this->length_ += sizeof(struct of15::ofp_meter_multipart_request);
 }
 
 bool MultipartRequestMeter::operator==(
@@ -2046,39 +2084,40 @@ bool MultipartRequestMeter::operator!=(
 
 uint8_t* MultipartRequestMeter::pack() {
     uint8_t* buffer = MultipartRequest::pack();
-    struct of13::ofp_meter_multipart_request *mr =
-        (struct of13::ofp_meter_multipart_request *) (buffer
-            + sizeof(struct of13::ofp_multipart_reply));
+    struct of15::ofp_meter_multipart_request *mr =
+        (struct of15::ofp_meter_multipart_request *) (buffer
+            + sizeof(struct of15::ofp_multipart_reply));
     mr->meter_id = hton32(this->meter_id_);
     memset(mr->pad, 0x0, 4);
     return buffer;
 }
 
 of_error MultipartRequestMeter::unpack(uint8_t *buffer) {
-    struct of13::ofp_meter_multipart_request *mr =
-        (struct of13::ofp_meter_multipart_request *) (buffer
-            + sizeof(struct of13::ofp_multipart_reply));
+    struct of15::ofp_meter_multipart_request *mr =
+        (struct of15::ofp_meter_multipart_request *) (buffer
+            + sizeof(struct of15::ofp_multipart_reply));
     MultipartRequest::unpack(buffer);
     if (this->length_
-        < sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_meter_multipart_request)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        < sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_meter_multipart_request)) {
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->meter_id_ = ntoh32(mr->meter_id);
     return 0;
 }
 
+//TODO: handle other OFPMP_METER_ reply types
 MultipartReplyMeter::MultipartReplyMeter()
-    : MultipartReply(OFPMP_METER) {
+    : MultipartReply(of15::OFPMP_METER_STATS) { //Aman
 }
 
 MultipartReplyMeter::MultipartReplyMeter(uint32_t xid, uint16_t flags)
-    : MultipartReply(xid, of13::OFPMP_METER, flags) {
+    : MultipartReply(xid, of15::OFPMP_METER_STATS, flags) { //Aman
 }
 
 MultipartReplyMeter::MultipartReplyMeter(uint32_t xid, uint16_t flags,
-    std::vector<of13::MeterStats> meter_stats)
-    : MultipartReply(xid, of13::OFPMP_METER, flags),
+    std::vector<of15::MeterStats> meter_stats)
+    : MultipartReply(xid, of15::OFPMP_METER_STATS, flags), //Aman
       meter_stats_(meter_stats) {
     this->length_ += meter_stats_len();
 }
@@ -2094,8 +2133,8 @@ bool MultipartReplyMeter::operator!=(const MultipartReplyMeter &other) const {
 
 uint8_t* MultipartReplyMeter::pack() {
     uint8_t* buffer = MultipartReply::pack();
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
-    for (std::vector<of13::MeterStats>::iterator it =
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
+    for (std::vector<of15::MeterStats>::iterator it =
         this->meter_stats_.begin(); it != this->meter_stats_.end(); ++it) {
         it->pack(p);
         p += it->len();
@@ -2105,10 +2144,10 @@ uint8_t* MultipartReplyMeter::pack() {
 
 of_error MultipartReplyMeter::unpack(uint8_t *buffer) {
     MultipartReply::unpack(buffer);
-    uint8_t len = this->length_ - sizeof(struct of13::ofp_multipart_reply);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
+    uint8_t len = this->length_ - sizeof(struct of15::ofp_multipart_reply);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
     while (len) {
-        of13::MeterStats stat;
+        of15::MeterStats stat;
         stat.unpack(p);
         this->meter_stats_.push_back(stat);
         p += stat.len();
@@ -2118,19 +2157,19 @@ of_error MultipartReplyMeter::unpack(uint8_t *buffer) {
 }
 
 void MultipartReplyMeter::meter_stats(
-    std::vector<of13::MeterStats> meter_stats) {
+    std::vector<of15::MeterStats> meter_stats) {
     this->meter_stats_ = meter_stats;
     this->length_ += meter_stats_len();
 }
 
-void MultipartReplyMeter::add_meter_stats(of13::MeterStats stat) {
+void MultipartReplyMeter::add_meter_stats(of15::MeterStats stat) {
     this->meter_stats_.push_back(stat);
     this->length_ += stat.len();
 }
 
 size_t MultipartReplyMeter::meter_stats_len() {
     size_t len;
-    for (std::vector<of13::MeterStats>::iterator it =
+    for (std::vector<of15::MeterStats>::iterator it =
         this->meter_stats_.begin(); it != this->meter_stats_.end(); ++it) {
         len += it->len();
     }
@@ -2138,15 +2177,15 @@ size_t MultipartReplyMeter::meter_stats_len() {
 }
 
 MultipartRequestMeterConfig::MultipartRequestMeterConfig()
-    : MultipartRequest(OFPMP_METER_CONFIG) {
-    this->length_ += sizeof(struct of13::ofp_meter_multipart_request);
+    : MultipartRequest(of15::OFPMP_METER_DESC) { //Aman
+    this->length_ += sizeof(struct of15::ofp_meter_multipart_request);
 }
 
 MultipartRequestMeterConfig::MultipartRequestMeterConfig(uint32_t xid,
     uint16_t flags, uint32_t meter_id)
-    : MultipartRequest(xid, of13::OFPMP_METER, flags),
+    : MultipartRequest(xid, of15::OFPMP_METER_DESC, flags), //Aman
       meter_id_(meter_id) {
-    this->length_ += sizeof(struct of13::ofp_meter_multipart_request);
+    this->length_ += sizeof(struct of15::ofp_meter_multipart_request);
 }
 
 bool MultipartRequestMeterConfig::operator==(
@@ -2162,40 +2201,40 @@ bool MultipartRequestMeterConfig::operator!=(
 
 uint8_t* MultipartRequestMeterConfig::pack() {
     uint8_t* buffer = MultipartRequest::pack();
-    struct of13::ofp_meter_multipart_request *mr =
-        (struct of13::ofp_meter_multipart_request *) (buffer
-            + sizeof(struct of13::ofp_multipart_reply));
+    struct of15::ofp_meter_multipart_request *mr =
+        (struct of15::ofp_meter_multipart_request *) (buffer
+            + sizeof(struct of15::ofp_multipart_reply));
     mr->meter_id = hton32(this->meter_id_);
     memset(mr->pad, 0x0, 4);
     return buffer;
 }
 
 of_error MultipartRequestMeterConfig::unpack(uint8_t *buffer) {
-    struct of13::ofp_meter_multipart_request *mr =
-        (struct of13::ofp_meter_multipart_request *) (buffer
-            + sizeof(struct of13::ofp_multipart_reply));
+    struct of15::ofp_meter_multipart_request *mr =
+        (struct of15::ofp_meter_multipart_request *) (buffer
+            + sizeof(struct of15::ofp_multipart_reply));
     MultipartRequest::unpack(buffer);
     if (this->length_
-        < sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_meter_multipart_request)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        < sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_meter_multipart_request)) {
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->meter_id_ = ntoh32(mr->meter_id);
     return 0;
 }
 
 MultipartReplyMeterConfig::MultipartReplyMeterConfig()
-    : MultipartReply(OFPMP_METER_CONFIG) {
+    : MultipartReply(of15::OFPMP_METER_DESC) { //Aman
 }
 
 MultipartReplyMeterConfig::MultipartReplyMeterConfig(uint32_t xid,
     uint16_t flags)
-    : MultipartReply(xid, of13::OFPMP_METER_CONFIG, flags) {
+    : MultipartReply(xid, of15::OFPMP_METER_DESC, flags) { //Aman
 }
 
 MultipartReplyMeterConfig::MultipartReplyMeterConfig(uint32_t xid,
     uint16_t flags, std::vector<MeterConfig> meter_config)
-    : MultipartReply(xid, of13::OFPMP_METER_CONFIG, flags),
+    : MultipartReply(xid, of15::OFPMP_METER_DESC, flags), //Aman
       meter_config_(meter_config) {
     this->length_ += meter_config_len();
 }
@@ -2213,7 +2252,7 @@ bool MultipartReplyMeterConfig::operator!=(
 
 uint8_t* MultipartReplyMeterConfig::pack() {
     uint8_t* buffer = MultipartReply::pack();
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
     for (std::vector<MeterConfig>::iterator it = this->meter_config_.begin();
         it != this->meter_config_.end(); ++it) {
         it->pack(p);
@@ -2224,8 +2263,8 @@ uint8_t* MultipartReplyMeterConfig::pack() {
 
 of_error MultipartReplyMeterConfig::unpack(uint8_t *buffer) {
     MultipartReply::unpack(buffer);
-    size_t len = this->length_ - sizeof(struct of13::ofp_multipart_reply);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
+    size_t len = this->length_ - sizeof(struct of15::ofp_multipart_reply);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
     while (len) {
         MeterConfig conf;
         conf.unpack(p);
@@ -2262,7 +2301,7 @@ MultipartRequestMeterFeatures::MultipartRequestMeterFeatures()
 
 MultipartRequestMeterFeatures::MultipartRequestMeterFeatures(uint32_t xid,
     uint16_t flags)
-    : MultipartRequest(xid, of13::OFPMP_METER_FEATURES, flags) {
+    : MultipartRequest(xid, of15::OFPMP_METER_FEATURES, flags) {
 }
 
 uint8_t* MultipartRequestMeterFeatures::pack() {
@@ -2276,15 +2315,14 @@ of_error MultipartRequestMeterFeatures::unpack(uint8_t *buffer) {
 
 MultipartReplyMeterFeatures::MultipartReplyMeterFeatures()
     : MultipartReply(OFPMP_METER_FEATURES) {
-    this->length_ += sizeof(struct of13::ofp_meter_features);
 }
 
 MultipartReplyMeterFeatures::MultipartReplyMeterFeatures(uint32_t xid,
     uint16_t flags, MeterFeatures features)
-    : MultipartReply(xid, of13::OFPMP_METER_FEATURES, flags),
+    : MultipartReply(xid, of15::OFPMP_METER_FEATURES, flags),
       meter_features_(features) {
     this->meter_features_ = features;
-    this->length_ += sizeof(struct of13::ofp_meter_features);
+    this->length_ += sizeof(struct of15::ofp_meter_features);
 }
 
 bool MultipartReplyMeterFeatures::operator==(
@@ -2301,14 +2339,14 @@ bool MultipartReplyMeterFeatures::operator!=(
 uint8_t* MultipartReplyMeterFeatures::pack() {
     uint8_t* buffer = MultipartReply::pack();
     this->meter_features_.pack(
-        buffer + sizeof(struct of13::ofp_multipart_reply));
+        buffer + sizeof(struct of15::ofp_multipart_reply));
     return buffer;
 }
 
 of_error MultipartReplyMeterFeatures::unpack(uint8_t *buffer) {
     MultipartReply::unpack(buffer);
     this->meter_features_.unpack(
-        buffer + sizeof(struct of13::ofp_multipart_reply));
+        buffer + sizeof(struct of15::ofp_multipart_reply));
     return 0;
 }
 
@@ -2318,12 +2356,12 @@ MultipartRequestTableFeatures::MultipartRequestTableFeatures()
 
 MultipartRequestTableFeatures::MultipartRequestTableFeatures(uint32_t xid,
     uint16_t flags)
-    : MultipartRequest(xid, of13::OFPMP_TABLE_FEATURES, flags) {
+    : MultipartRequest(xid, of15::OFPMP_TABLE_FEATURES, flags) {
 }
 
 MultipartRequestTableFeatures::MultipartRequestTableFeatures(uint32_t xid,
     uint16_t flags, std::vector<TableFeatures> tables_features)
-    : MultipartRequest(xid, of13::OFPMP_TABLE_FEATURES, flags) {
+    : MultipartRequest(xid, of15::OFPMP_TABLE_FEATURES, flags) {
     this->tables_features_ = tables_features;
     size_t features_len = 0;
     for (std::vector<TableFeatures>::iterator it =
@@ -2359,8 +2397,8 @@ uint8_t* MultipartRequestTableFeatures::pack() {
 
 of_error MultipartRequestTableFeatures::unpack(uint8_t *buffer) {
     MultipartRequest::unpack(buffer);
-    size_t len = this->length_ - sizeof(struct of13::ofp_multipart_reply);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
+    size_t len = this->length_ - sizeof(struct of15::ofp_multipart_reply);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
     while (len) {
         TableFeatures features;
         features.unpack(p);
@@ -2395,12 +2433,12 @@ MultipartReplyTableFeatures::MultipartReplyTableFeatures()
 
 MultipartReplyTableFeatures::MultipartReplyTableFeatures(uint32_t xid,
     uint16_t flags)
-    : MultipartReply(xid, of13::OFPMP_TABLE_FEATURES, flags) {
+    : MultipartReply(xid, of15::OFPMP_TABLE_FEATURES, flags) {
 }
 
 MultipartReplyTableFeatures::MultipartReplyTableFeatures(uint32_t xid,
     uint16_t flags, std::vector<TableFeatures> tables_features)
-    : MultipartReply(xid, of13::OFPMP_TABLE_FEATURES, flags) {
+    : MultipartReply(xid, of15::OFPMP_TABLE_FEATURES, flags) {
     this->tables_features_ = tables_features;
     size_t features_len = 0;
     for (std::vector<TableFeatures>::iterator it =
@@ -2436,8 +2474,8 @@ uint8_t* MultipartReplyTableFeatures::pack() {
 
 of_error MultipartReplyTableFeatures::unpack(uint8_t *buffer) {
     MultipartReply::unpack(buffer);
-    size_t len = this->length_ - sizeof(struct of13::ofp_multipart_reply);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
+    size_t len = this->length_ - sizeof(struct of15::ofp_multipart_reply);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
     while (len) {
         TableFeatures features;
         features.unpack(p);
@@ -2472,7 +2510,7 @@ MultipartRequestPortDescription::MultipartRequestPortDescription()
 
 MultipartRequestPortDescription::MultipartRequestPortDescription(uint32_t xid,
     uint16_t flags)
-    : MultipartRequest(xid, of13::OFPMP_PORT_DESC, flags) {
+    : MultipartRequest(xid, of15::OFPMP_PORT_DESC, flags) {
 }
 
 uint8_t* MultipartRequestPortDescription::pack() {
@@ -2490,14 +2528,14 @@ MultipartReplyPortDescription::MultipartReplyPortDescription()
 
 MultipartReplyPortDescription::MultipartReplyPortDescription(uint32_t xid,
     uint16_t flags)
-    : MultipartReply(xid, of13::OFPMP_PORT_DESC, flags) {
+    : MultipartReply(xid, of15::OFPMP_PORT_DESC, flags) {
 }
 
 MultipartReplyPortDescription::MultipartReplyPortDescription(uint32_t xid,
-    uint16_t flags, std::vector<of13::Port> ports)
-    : MultipartReply(xid, of13::OFPMP_PORT_DESC, flags) {
+    uint16_t flags, std::vector<of15::Port> ports)
+    : MultipartReply(xid, of15::OFPMP_PORT_DESC, flags) {
     this->ports_ = ports;
-    this->length_ += ports.size() * sizeof(struct of13::ofp_port);
+    this->length_ += ports.size() * sizeof(struct of15::ofp_port);
 }
 
 bool MultipartReplyPortDescription::operator==(
@@ -2513,50 +2551,50 @@ bool MultipartReplyPortDescription::operator!=(
 
 uint8_t* MultipartReplyPortDescription::pack() {
     uint8_t* buffer = MultipartReply::pack();
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
-    for (std::vector<of13::Port>::iterator it = this->ports_.begin();
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
+    for (std::vector<of15::Port>::iterator it = this->ports_.begin();
         it != this->ports_.end(); ++it) {
         it->pack(p);
-        p += sizeof(struct of13::ofp_port);
+        p += sizeof(struct of15::ofp_port);
     }
     return buffer;
 }
 
 of_error MultipartReplyPortDescription::unpack(uint8_t *buffer) {
     MultipartReply::unpack(buffer);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_multipart_reply);
-    size_t len = this->length_ - sizeof(struct of13::ofp_multipart_reply);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_multipart_reply);
+    size_t len = this->length_ - sizeof(struct of15::ofp_multipart_reply);
     while (len) {
-        of13::Port port;
+        of15::Port port;
         port.unpack(p);
         this->ports_.push_back(port);
-        p += sizeof(struct of13::ofp_port);
-        len -= sizeof(struct of13::ofp_port);
+        p += sizeof(struct of15::ofp_port);
+        len -= sizeof(struct of15::ofp_port);
     }
     return 0;
 }
 
-void MultipartReplyPortDescription::ports(std::vector<of13::Port> ports) {
+void MultipartReplyPortDescription::ports(std::vector<of15::Port> ports) {
     this->ports_ = ports;
-    this->length_ += ports.size() * sizeof(struct of13::ofp_port);
+    this->length_ += ports.size() * sizeof(struct of15::ofp_port);
 }
 
-void MultipartReplyPortDescription::add_port(of13::Port port) {
+void MultipartReplyPortDescription::add_port(of15::Port port) {
     this->ports_.push_back(port);
-    this->length_ += sizeof(struct of13::ofp_port);
+    this->length_ += sizeof(struct of15::ofp_port);
 }
 
 MultipartRequestExperimenter::MultipartRequestExperimenter()
     : MultipartRequest(OFPMP_EXPERIMENTER) {
-    this->length_ += sizeof(struct of13::ofp_experimenter_multipart_header);
+    this->length_ += sizeof(struct of15::ofp_experimenter_multipart_header);
 }
 
 MultipartRequestExperimenter::MultipartRequestExperimenter(uint32_t xid,
     uint16_t flags, uint32_t experimenter, uint32_t exp_type)
-    : MultipartRequest(xid, of13::OFPMP_EXPERIMENTER, flags),
+    : MultipartRequest(xid, of15::OFPMP_EXPERIMENTER, flags),
       experimenter_(experimenter),
       exp_type_(exp_type) {
-    this->length_ += sizeof(struct of13::ofp_experimenter_multipart_header);
+    this->length_ += sizeof(struct of15::ofp_experimenter_multipart_header);
 }
 
 bool MultipartRequestExperimenter::operator==(
@@ -2573,16 +2611,16 @@ bool MultipartRequestExperimenter::operator!=(
 
 uint8_t* MultipartRequestExperimenter::pack() {
     uint8_t* buffer = MultipartRequest::pack();
-    struct of13::ofp_experimenter_multipart_header *em =
-        (struct of13::ofp_experimenter_multipart_header*) buffer;
+    struct of15::ofp_experimenter_multipart_header *em =
+        (struct of15::ofp_experimenter_multipart_header*) buffer;
     em->experimenter = hton32(this->experimenter_);
     em->exp_type = hton32(this->exp_type_);
     return buffer;
 }
 
 of_error MultipartRequestExperimenter::unpack(uint8_t *buffer) {
-    struct of13::ofp_experimenter_multipart_header *em =
-        (struct of13::ofp_experimenter_multipart_header*) buffer;
+    struct of15::ofp_experimenter_multipart_header *em =
+        (struct of15::ofp_experimenter_multipart_header*) buffer;
     MultipartRequest::unpack(buffer);
     this->experimenter_ = ntoh32(em->experimenter);
     this->exp_type_ = ntoh32(em->exp_type);
@@ -2591,15 +2629,15 @@ of_error MultipartRequestExperimenter::unpack(uint8_t *buffer) {
 
 MultipartReplyExperimenter::MultipartReplyExperimenter()
     : MultipartReply(OFPMP_EXPERIMENTER) {
-    this->length_ += sizeof(struct of13::ofp_experimenter_multipart_header);
+    this->length_ += sizeof(struct of15::ofp_experimenter_multipart_header);
 }
 
 MultipartReplyExperimenter::MultipartReplyExperimenter(uint32_t xid,
     uint16_t flags, uint32_t experimenter, uint32_t exp_type)
-    : MultipartReply(xid, of13::OFPMP_EXPERIMENTER, flags),
+    : MultipartReply(xid, of15::OFPMP_EXPERIMENTER, flags),
       experimenter_(experimenter),
       exp_type_(exp_type) {
-    this->length_ += sizeof(struct of13::ofp_experimenter_multipart_header);
+    this->length_ += sizeof(struct of15::ofp_experimenter_multipart_header);
 }
 
 bool MultipartReplyExperimenter::operator==(
@@ -2616,155 +2654,157 @@ bool MultipartReplyExperimenter::operator!=(
 
 uint8_t* MultipartReplyExperimenter::pack() {
     uint8_t* buffer = MultipartReply::pack();
-    struct of13::ofp_experimenter_multipart_header *em =
-        (struct of13::ofp_experimenter_multipart_header*) buffer;
+    struct of15::ofp_experimenter_multipart_header *em =
+        (struct of15::ofp_experimenter_multipart_header*) buffer;
     em->experimenter = hton32(this->experimenter_);
     em->exp_type = hton32(this->exp_type_);
     return buffer;
 }
 
 of_error MultipartReplyExperimenter::unpack(uint8_t *buffer) {
-    struct of13::ofp_experimenter_multipart_header *em =
-        (struct of13::ofp_experimenter_multipart_header*) buffer;
+    struct of15::ofp_experimenter_multipart_header *em =
+        (struct of15::ofp_experimenter_multipart_header*) buffer;
     MultipartReply::unpack(buffer);
     if (this->length_
-        < sizeof(struct of13::ofp_multipart_request)
-            + sizeof(struct of13::ofp_experimenter_multipart_header)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        < sizeof(struct of15::ofp_multipart_request)
+            + sizeof(struct of15::ofp_experimenter_multipart_header)) {
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->experimenter_ = ntoh32(em->experimenter);
     this->exp_type_ = ntoh32(em->exp_type);
     return 0;
 }
 
-QueueGetConfigRequest::QueueGetConfigRequest()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_QUEUE_GET_CONFIG_REQUEST) {
-    this->length_ = sizeof(struct of13::ofp_queue_get_config_request);
-}
-
-QueueGetConfigRequest::QueueGetConfigRequest(uint32_t xid, uint32_t port)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_QUEUE_GET_CONFIG_REQUEST, xid),
-      port_(port) {
-    this->length_ = sizeof(struct of13::ofp_queue_get_config_request);
-}
-
-bool QueueGetConfigRequest::operator==(
-    const QueueGetConfigRequest &other) const {
-    return ((OFMsg::operator==(other)) && (this->port_ == other.port_));
-}
-
-bool QueueGetConfigRequest::operator!=(
-    const QueueGetConfigRequest &other) const {
-    return !(*this == other);
-}
-
-uint8_t* QueueGetConfigRequest::pack() {
-    uint8_t* buffer = OFMsg::pack();
-    struct of13::ofp_queue_get_config_request * qc =
-        (struct of13::ofp_queue_get_config_request*) buffer;
-    qc->port = hton32(this->port_);
-    memset(qc->pad, 0x0, 4);
-    return buffer;
-}
-
-of_error QueueGetConfigRequest::unpack(uint8_t *buffer) {
-    struct of13::ofp_queue_get_config_request * qc =
-        (struct of13::ofp_queue_get_config_request*) buffer;
-    OFMsg::unpack(buffer);
-    if (this->length_ < sizeof(struct of13::ofp_queue_get_config_request)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
-    }
-    this->port_ = ntoh32(qc->port);
-    return 0;
-}
-
-QueueGetConfigReply::QueueGetConfigReply()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_QUEUE_GET_CONFIG_REPLY) {
-    this->length_ = sizeof(struct of13::ofp_queue_get_config_reply);
-}
-
-QueueGetConfigReply::QueueGetConfigReply(uint32_t xid, uint32_t port)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_QUEUE_GET_CONFIG_REPLY, xid) {
-    this->port_ = port;
-    this->length_ = sizeof(struct of13::ofp_queue_get_config_reply);
-}
-
-QueueGetConfigReply::QueueGetConfigReply(uint32_t xid, uint16_t port,
-    std::list<of13::PacketQueue> queues)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_QUEUE_GET_CONFIG_REPLY, xid),
-      port_(port),
-      queues_(queues) {
-    this->length_ = sizeof(struct of13::ofp_queue_get_config_reply)
-        + queues_len();
-}
-
-bool QueueGetConfigReply::operator==(const QueueGetConfigReply &other) const {
-    return ((OFMsg::operator==(other)) && (this->port_ == other.port_)
-        && (this->queues_ == other.queues_));
-}
-
-bool QueueGetConfigReply::operator!=(const QueueGetConfigReply &other) const {
-    return !(*this == other);
-}
-
-uint8_t* QueueGetConfigReply::pack() {
-    uint8_t* buffer = OFMsg::pack();
-    struct of13::ofp_queue_get_config_reply *qr =
-        (struct of13::ofp_queue_get_config_reply *) buffer;
-    qr->port = hton32(this->port_);
-    memset(qr->pad, 0x0, 6);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_queue_get_config_reply);
-    for (std::list<PacketQueue>::iterator it = this->queues_.begin(), end =
-        this->queues_.end(); it != end; ++it) {
-        it->pack(p);
-        p += it->len();
-    }
-    return buffer;
-}
-
-of_error QueueGetConfigReply::unpack(uint8_t *buffer) {
-    struct of13::ofp_queue_get_config_reply *qr =
-        (struct of13::ofp_queue_get_config_reply *) buffer;
-    OFMsg::unpack(buffer);
-    this->port_ = ntoh32(qr->port);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_queue_get_config_reply);
-    size_t len = this->length_
-        - sizeof(struct of13::ofp_queue_get_config_reply);
-    while (len) {
-        PacketQueue pq;
-        pq.unpack(p);
-        this->queues_.push_back(pq);
-        p += pq.len();
-        len -= pq.len();
-    }
-    return 0;
-}
-
-void QueueGetConfigReply::queues(std::list<of13::PacketQueue> queues) {
-    this->queues_ = queues;
-    this->length_ += queues_len();
-}
-
-void QueueGetConfigReply::add_queue(PacketQueue queue) {
-    this->queues_.push_back(queue);
-    this->length_ += queue.len();
-}
-
-size_t QueueGetConfigReply::queues_len() {
-    size_t len;
-    for (std::list<PacketQueue>::iterator it = this->queues_.begin(), end =
-        this->queues_.end(); it != end; ++it) {
-        len += it->len();
-    }
-    return len;
-}
+//Aman
+// TODO: Change to multipart request
+//QueueGetConfigRequest::QueueGetConfigRequest()
+//    : OFMsg(of15::OFP_VERSION, of15::OFPT_QUEUE_GET_CONFIG_REQUEST) {
+//    this->length_ = sizeof(struct of15::ofp_queue_get_config_request);
+//}
+//
+//QueueGetConfigRequest::QueueGetConfigRequest(uint32_t xid, uint32_t port)
+//    : OFMsg(of15::OFP_VERSION, of15::OFPT_QUEUE_GET_CONFIG_REQUEST, xid),
+//      port_(port) {
+//    this->length_ = sizeof(struct of15::ofp_queue_get_config_request);
+//}
+//
+//bool QueueGetConfigRequest::operator==(
+//    const QueueGetConfigRequest &other) const {
+//    return ((OFMsg::operator==(other)) && (this->port_ == other.port_));
+//}
+//
+//bool QueueGetConfigRequest::operator!=(
+//    const QueueGetConfigRequest &other) const {
+//    return !(*this == other);
+//}
+//
+//uint8_t* QueueGetConfigRequest::pack() {
+//    uint8_t* buffer = OFMsg::pack();
+//    struct of15::ofp_queue_get_config_request * qc =
+//        (struct of15::ofp_queue_get_config_request*) buffer;
+//    qc->port = hton32(this->port_);
+//    memset(qc->pad, 0x0, 4);
+//    return buffer;
+//}
+//
+//of_error QueueGetConfigRequest::unpack(uint8_t *buffer) {
+//    struct of15::ofp_queue_get_config_request * qc =
+//        (struct of15::ofp_queue_get_config_request*) buffer;
+//    OFMsg::unpack(buffer);
+//    if (this->length_ < sizeof(struct of15::ofp_queue_get_config_request)) {
+//        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
+//    }
+//    this->port_ = ntoh32(qc->port);
+//    return 0;
+//}
+//
+//QueueGetConfigReply::QueueGetConfigReply()
+//    : OFMsg(of15::OFP_VERSION, of15::OFPT_QUEUE_GET_CONFIG_REPLY) {
+//    this->length_ = sizeof(struct of15::ofp_queue_get_config_reply);
+//}
+//
+//QueueGetConfigReply::QueueGetConfigReply(uint32_t xid, uint32_t port)
+//    : OFMsg(of15::OFP_VERSION, of15::OFPT_QUEUE_GET_CONFIG_REPLY, xid) {
+//    this->port_ = port;
+//    this->length_ = sizeof(struct of15::ofp_queue_get_config_reply);
+//}
+//
+//QueueGetConfigReply::QueueGetConfigReply(uint32_t xid, uint16_t port,
+//    std::list<of15::PacketQueue> queues)
+//    : OFMsg(of15::OFP_VERSION, of15::OFPT_QUEUE_GET_CONFIG_REPLY, xid),
+//      port_(port),
+//      queues_(queues) {
+//    this->length_ = sizeof(struct of15::ofp_queue_get_config_reply)
+//        + queues_len();
+//}
+//
+//bool QueueGetConfigReply::operator==(const QueueGetConfigReply &other) const {
+//    return ((OFMsg::operator==(other)) && (this->port_ == other.port_)
+//        && (this->queues_ == other.queues_));
+//}
+//
+//bool QueueGetConfigReply::operator!=(const QueueGetConfigReply &other) const {
+//    return !(*this == other);
+//}
+//
+//uint8_t* QueueGetConfigReply::pack() {
+//    uint8_t* buffer = OFMsg::pack();
+//    struct of15::ofp_queue_get_config_reply *qr =
+//        (struct of15::ofp_queue_get_config_reply *) buffer;
+//    qr->port = hton32(this->port_);
+//    memset(qr->pad, 0x0, 6);
+//    uint8_t *p = buffer + sizeof(struct of15::ofp_queue_get_config_reply);
+//    for (std::list<PacketQueue>::iterator it = this->queues_.begin(), end =
+//        this->queues_.end(); it != end; ++it) {
+//        it->pack(p);
+//        p += it->len();
+//    }
+//    return buffer;
+//}
+//
+//of_error QueueGetConfigReply::unpack(uint8_t *buffer) {
+//    struct of15::ofp_queue_get_config_reply *qr =
+//        (struct of15::ofp_queue_get_config_reply *) buffer;
+//    OFMsg::unpack(buffer);
+//    this->port_ = ntoh32(qr->port);
+//    uint8_t *p = buffer + sizeof(struct of15::ofp_queue_get_config_reply);
+//    size_t len = this->length_
+//        - sizeof(struct of15::ofp_queue_get_config_reply);
+//    while (len) {
+//        PacketQueue pq;
+//        pq.unpack(p);
+//        this->queues_.push_back(pq);
+//        p += pq.len();
+//        len -= pq.len();
+//    }
+//    return 0;
+//}
+//
+//void QueueGetConfigReply::queues(std::list<of15::PacketQueue> queues) {
+//    this->queues_ = queues;
+//    this->length_ += queues_len();
+//}
+//
+//void QueueGetConfigReply::add_queue(PacketQueue queue) {
+//    this->queues_.push_back(queue);
+//    this->length_ += queue.len();
+//}
+//
+//size_t QueueGetConfigReply::queues_len() {
+//    size_t len;
+//    for (std::list<PacketQueue>::iterator it = this->queues_.begin(), end =
+//        this->queues_.end(); it != end; ++it) {
+//        len += it->len();
+//    }
+//    return len;
+//}
 
 BarrierRequest::BarrierRequest()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_BARRIER_REQUEST) {
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_BARRIER_REQUEST) {
 }
 
 BarrierRequest::BarrierRequest(uint32_t xid)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_BARRIER_REQUEST, xid) {
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_BARRIER_REQUEST, xid) {
 }
 
 uint8_t* BarrierRequest::pack() {
@@ -2774,17 +2814,17 @@ uint8_t* BarrierRequest::pack() {
 of_error BarrierRequest::unpack(uint8_t *buffer) {
     OFMsg::unpack(buffer);
     if (this->length_ < sizeof(struct ofp_header)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     return 0;
 }
 
 BarrierReply::BarrierReply()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_BARRIER_REPLY) {
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_BARRIER_REPLY) {
 }
 
 BarrierReply::BarrierReply(uint32_t xid)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_BARRIER_REPLY, xid) {
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_BARRIER_REPLY, xid) {
 }
 
 uint8_t* BarrierReply::pack() {
@@ -2797,29 +2837,29 @@ of_error BarrierReply::unpack(uint8_t *buffer) {
 }
 
 RoleRequest::RoleRequest()
-    : RoleCommon(of13::OFP_VERSION, of13::OFPT_ROLE_REQUEST) {
+    : RoleCommon(of15::OFP_VERSION, of15::OFPT_ROLE_REQUEST) {
 }
 
 RoleRequest::RoleRequest(uint32_t xid, uint32_t role, uint64_t generation_id)
-    : RoleCommon(of13::OFP_VERSION, of13::OFPT_ROLE_REQUEST, xid, role,
+    : RoleCommon(of15::OFP_VERSION, of15::OFPT_ROLE_REQUEST, xid, role,
         generation_id) {
 }
 
 RoleReply::RoleReply()
-    : RoleCommon(of13::OFP_VERSION, of13::OFPT_ROLE_REPLY) {
+    : RoleCommon(of15::OFP_VERSION, of15::OFPT_ROLE_REPLY) {
 }
 
 RoleReply::RoleReply(uint32_t xid, uint32_t role, uint64_t generation_id)
-    : RoleCommon(of13::OFP_VERSION, of13::OFPT_ROLE_REPLY, xid, role,
+    : RoleCommon(of15::OFP_VERSION, of15::OFPT_ROLE_REPLY, xid, role,
         generation_id) {
 }
 
 GetAsyncRequest::GetAsyncRequest()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_GET_ASYNC_REQUEST) {
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_GET_ASYNC_REQUEST) {
 }
 
 GetAsyncRequest::GetAsyncRequest(uint32_t xid)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_GET_ASYNC_REQUEST, xid) {
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_GET_ASYNC_REQUEST, xid) {
 }
 
 uint8_t* GetAsyncRequest::pack() {
@@ -2829,65 +2869,65 @@ uint8_t* GetAsyncRequest::pack() {
 of_error GetAsyncRequest::unpack(uint8_t *buffer) {
     OFMsg::unpack(buffer);
     if (this->length_ < sizeof(struct ofp_header)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     return 0;
 }
 
 GetAsyncReply::GetAsyncReply()
-    : AsyncConfigCommon(of13::OFP_VERSION, of13::OFPT_GET_ASYNC_REPLY) {
+    : AsyncConfigCommon(of15::OFP_VERSION, of15::OFPT_GET_ASYNC_REPLY) {
 }
 
 GetAsyncReply::GetAsyncReply(uint32_t xid)
-    : AsyncConfigCommon(of13::OFP_VERSION, of13::OFPT_GET_ASYNC_REPLY, xid) {
+    : AsyncConfigCommon(of15::OFP_VERSION, of15::OFPT_GET_ASYNC_REPLY, xid) {
 }
 
 GetAsyncReply::GetAsyncReply(uint32_t xid, std::vector<uint32_t> packet_in_mask,
     std::vector<uint32_t> port_status_mask,
     std::vector<uint32_t> flow_removed_mask)
-    : AsyncConfigCommon(of13::OFP_VERSION, of13::OFPT_GET_ASYNC_REPLY, xid,
+    : AsyncConfigCommon(of15::OFP_VERSION, of15::OFPT_GET_ASYNC_REPLY, xid,
         packet_in_mask, port_status_mask, flow_removed_mask) {
 
 }
 
 SetAsync::SetAsync()
-    : AsyncConfigCommon(of13::OFP_VERSION, of13::OFPT_SET_ASYNC) {
+    : AsyncConfigCommon(of15::OFP_VERSION, of15::OFPT_SET_ASYNC) {
 }
 
 SetAsync::SetAsync(uint32_t xid)
-    : AsyncConfigCommon(of13::OFP_VERSION, of13::OFPT_SET_ASYNC, xid) {
+    : AsyncConfigCommon(of15::OFP_VERSION, of15::OFPT_SET_ASYNC, xid) {
 }
 
 SetAsync::SetAsync(uint32_t xid, std::vector<uint32_t> packet_in_mask,
     std::vector<uint32_t> port_status_mask,
     std::vector<uint32_t> flow_removed_mask)
-    : AsyncConfigCommon(of13::OFP_VERSION, of13::OFPT_SET_ASYNC, xid,
+    : AsyncConfigCommon(of15::OFP_VERSION, of15::OFPT_SET_ASYNC, xid,
         packet_in_mask, port_status_mask, flow_removed_mask) {
 
 }
 
 MeterMod::MeterMod()
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_METER_MOD) {
-    this->length_ = sizeof(struct of13::ofp_meter_mod);
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_METER_MOD) {
+    this->length_ = sizeof(struct of15::ofp_meter_mod);
 }
 
 MeterMod::MeterMod(uint32_t xid, uint16_t command, uint16_t flags,
     uint32_t meter_id)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_METER_MOD, xid),
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_METER_MOD, xid),
       command_(command),
       meter_id_(meter_id),
       flags_(flags) {
-    this->length_ = sizeof(struct of13::ofp_meter_mod);
+    this->length_ = sizeof(struct of15::ofp_meter_mod);
 }
 
 MeterMod::MeterMod(uint32_t xid, uint16_t command, uint16_t flags,
     uint32_t meter_id, MeterBandList bands)
-    : OFMsg(of13::OFP_VERSION, of13::OFPT_METER_MOD, xid),
+    : OFMsg(of15::OFP_VERSION, of15::OFPT_METER_MOD, xid),
       command_(command),
       meter_id_(meter_id),
       flags_(flags),
       bands_(bands) {
-    this->length_ = sizeof(struct of13::ofp_meter_mod) + bands.length();
+    this->length_ = sizeof(struct of15::ofp_meter_mod) + bands.length();
 }
 
 bool MeterMod::operator==(const MeterMod &other) const {
@@ -2903,26 +2943,26 @@ bool MeterMod::operator!=(const MeterMod &other) const {
 
 uint8_t* MeterMod::pack() {
     uint8_t* buffer = OFMsg::pack();
-    struct of13::ofp_meter_mod *mm = (struct of13::ofp_meter_mod *) buffer;
+    struct of15::ofp_meter_mod *mm = (struct of15::ofp_meter_mod *) buffer;
     mm->command = hton16(this->command_);
     mm->flags = hton16(this->flags_);
     mm->meter_id = hton32(this->meter_id_);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_meter_mod);
+    uint8_t *p = buffer + sizeof(struct of15::ofp_meter_mod);
     this->bands_.pack(p);
     return buffer;
 }
 
 of_error MeterMod::unpack(uint8_t *buffer) {
-    struct of13::ofp_meter_mod *mm = (struct of13::ofp_meter_mod *) buffer;
+    struct of15::ofp_meter_mod *mm = (struct of15::ofp_meter_mod *) buffer;
     OFMsg::unpack(buffer);
-    if (this->length_ < sizeof(of13::ofp_meter_mod)) {
-        return openflow_error(of13::OFPET_BAD_REQUEST, of13::OFPBRC_BAD_LEN);
+    if (this->length_ < sizeof(of15::ofp_meter_mod)) {
+        return openflow_error(of15::OFPET_BAD_REQUEST, of15::OFPBRC_BAD_LEN);
     }
     this->command_ = ntoh16(mm->command);
     this->flags_ = ntoh16(mm->flags);
     this->meter_id_ = ntoh32(mm->meter_id);
-    uint8_t *p = buffer + sizeof(struct of13::ofp_meter_mod);
-    this->bands_.length(this->length_ - sizeof(struct of13::ofp_meter_mod));
+    uint8_t *p = buffer + sizeof(struct of15::ofp_meter_mod);
+    this->bands_.length(this->length_ - sizeof(struct of15::ofp_meter_mod));
     this->bands_.unpack(p);
     return 0;
 }
@@ -2937,6 +2977,6 @@ void MeterMod::add_band(MeterBand* band) {
     this->length_ += band->len();
 }
 
-} // End of namespace of13
+} // End of namespace of15
 } //End of namespace fluid_msg
 

@@ -51,6 +51,13 @@ nobase_libfluid_msg_include_HEADERS = \
                    fluid/of13/of13common.hh \
                    fluid/of13/openflow-13.h \
                    fluid/of13msg.hh \
+                   fluid/of15/of15instruction.hh\
+                   fluid/of15/of15match.hh \
+                   fluid/of15/of15meter.hh \
+                   fluid/of15/of15action.hh \
+                   fluid/of15/of15common.hh \
+                   fluid/of15/openflow-15.h \
+                   fluid/of15msg.hh \
                    fluid/util/ethaddr.hh \
                    fluid/util/ipaddr.hh \
                    fluid/util/util.h 
@@ -59,7 +66,8 @@ noinst_LTLIBRARIES = \
   fluid/util/libutil.la \
   fluid/ofcommon/libofcommon.la \
   fluid/of10/libof10.la \
-  fluid/of13/libof13.la 
+  fluid/of13/libof13.la \
+  fluid/of15/libof15.la 
 
 lib_LTLIBRARIES = \
   libfluid_msg.la
@@ -87,14 +95,24 @@ fluid_of13_libof13_la_SOURCES = \
                fluid/of13/of13match.hh fluid/of13/of13match.cc \
                fluid/of13/of13meter.hh fluid/of13/of13meter.cc \
                fluid/of13/of13common.hh fluid/of13/of13common.cc \
-               fluid/of13/openflow-13.h 
+               fluid/of13/openflow-13.h
+
+fluid_of15_libof15_la_SOURCES = \
+               fluid/of15/of15instruction.hh fluid/of15/of15instruction.cc \
+               fluid/of15/of15action.hh fluid/of15/of15action.cc \
+               fluid/of15/of15match.hh fluid/of15/of15match.cc \
+               fluid/of15/of15meter.hh fluid/of15/of15meter.cc \
+               fluid/of15/of15common.hh fluid/of15/of15common.cc \
+               fluid/of15/openflow-15.h
 
 libfluid_msg_la_SOURCES = fluid/of10msg.hh fluid/of10msg.cc \
-                          fluid/of13msg.hh fluid/of13msg.cc
+                          fluid/of13msg.hh fluid/of13msg.cc \
+                          fluid/of15msg.hh fluid/of15msg.cc
 libfluid_msg_la_LIBADD = $(top_builddir)/fluid/util/libutil.la \
                         $(top_builddir)/fluid/ofcommon/libofcommon.la \
                         $(top_builddir)/fluid/of10/libof10.la  \
-                        $(top_builddir)/fluid/of13/libof13.la  
+                        $(top_builddir)/fluid/of13/libof13.la  \
+                        $(top_builddir)/fluid/of15/libof15.la
 
 # Build rules for tests.
 # TESTS_ENVIRONMENT: Set environment variables for the test run

@@ -219,7 +219,7 @@ public:
     virtual SetTPSrcAction* clone() {
         return new SetTPSrcAction(*this);
     }
-    IPAddress tp_port() {
+    uint16_t tp_port() {
         return this->tp_port_;
     }
     void tp_port(uint16_t tp_port) {
@@ -241,7 +241,7 @@ public:
     virtual SetTPDstAction* clone() {
         return new SetTPDstAction(*this);
     }
-    IPAddress tp_port() {
+    uint16_t tp_port() {
         return this->tp_port_;
     }
     void tp_port(uint16_t tp_port) {
